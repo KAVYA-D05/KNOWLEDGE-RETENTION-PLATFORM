@@ -1,0 +1,101 @@
+.profile-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px;
+  min-height: 80vh;
+  background: #f4f6f9;
+}
+
+.profile-card {
+  width: 900px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  display: flex;
+  padding: 40px;
+  gap: 40px;
+}
+
+.profile-left {
+  width: 35%;
+  text-align: center;
+  border-right: 1px solid #eee;
+  padding-right: 30px;
+}
+
+.profile-image-wrapper {
+  margin-bottom: 15px;
+}
+
+.profile-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-placeholder {
+  width: 120px;
+  height: 120px;
+  background: #1e2a38;
+  color: white;
+  font-size: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.file-input {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.profile-left h3 {
+  margin-top: 15px;
+  font-size: 22px;
+}
+
+.profile-left p {
+  color: #555;
+}
+
+.profile-right {
+  width: 65%;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-right label {
+  margin-top: 15px;
+  font-weight: 600;
+}
+
+.profile-right input {
+  margin-top: 6px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.profile-right button {
+  margin-top: 25px;
+  padding: 10px;
+  border: none;
+  background: #1e2a38;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.profile-right button:hover {
+  background: #2c3e50;
+}
+
+.success-msg {
+  margin-top: 20px;
+  color: green;
+  font-weight: 600;
+}

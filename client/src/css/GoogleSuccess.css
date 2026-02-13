@@ -1,0 +1,46 @@
+.google-success-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  font-family: "Segoe UI", sans-serif;
+}
+
+.google-success-card {
+  background: #ffffff;
+  padding: 50px;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  width: 400px;
+}
+
+.google-success-card h3 {
+  margin-top: 20px;
+  font-size: 22px;
+  color: #1e293b;
+}
+
+.google-success-card p {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #64748b;
+}
+
+/* Spinner Loader */
+.loader {
+  margin: 0 auto;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #0d6efd;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+/* Animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
