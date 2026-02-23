@@ -1,0 +1,404 @@
+/* PAGE BACKGROUND */
+.notes-page {
+  background: #f4f6f9;
+  min-height: 100vh;
+}
+
+/* MAIN CONTAINER */
+.notes-container {
+  padding: 40px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* ================= HEADER ================= */
+.notes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.notes-header h2 {
+  font-size: 28px;
+  font-weight: 600;
+}
+
+/* SEARCH */
+.notes-header input {
+  padding: 10px 14px;
+  width: 260px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  outline: none;
+  transition: 0.3s;
+}
+
+.notes-header input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+/* ================= CREATE NOTE BOX ================= */
+.create-note-box {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 14px;
+  margin-bottom: 35px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.create-note-box h3 {
+  margin-bottom: 18px;
+  font-size: 20px;
+}
+
+.create-note-box form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.create-note-box input[type="text"],
+.create-note-box textarea,
+.create-note-box input[type="file"] {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.create-note-box textarea {
+  resize: none;
+  height: 90px;
+}
+
+.create-note-box input:focus,
+.create-note-box textarea:focus {
+  border-color: #2563eb;
+  outline: none;
+}
+
+/* ADD BUTTON */
+.create-note-box button {
+  background: linear-gradient(to right, #2563eb, #1e40af);
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.create-note-box button:hover {
+  opacity: 0.9;
+}
+
+/* ================= NOTES LIST ================= */
+.notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* NOTE CARD */
+.note-card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.3s;
+}
+
+.note-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+}
+
+/* NOTE INFO */
+.note-info h4 {
+  margin-bottom: 5px;
+  font-size: 18px;
+}
+
+.note-info p {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+.note-info span {
+  font-size: 12px;
+  color: #888;
+}
+
+/* ACTION BUTTONS */
+.note-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.view-btn {
+  background: #2563eb;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.view-btn:hover {
+  background: #1e40af;
+}
+
+.delete-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
+}
+
+.no-file {
+  font-size: 13px;
+  color: #999;
+}
+
+/* EMPTY STATE */
+.no-notes {
+  text-align: center;
+  color: #777;
+  margin-top: 20px;
+  font-size: 15px;
+}
+.share-btn {
+  background: #7c3aed;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.share-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.share-modal {
+  background: white;
+  padding: 30px;
+  border-radius: 14px;
+  width: 400px;
+  text-align: center;
+}
+
+.share-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 0;
+}
+
+.close-btn {
+  margin-top: 10px;
+}
+/* ================= SHARE MODAL ================= */
+
+.share-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.share-modal {
+  background: white;
+  padding: 30px;
+  border-radius: 18px;
+  width: 420px;
+  max-width: 90%;
+  text-align: center;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.share-modal h3 {
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+/* Link box */
+.share-modal input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+/* Share buttons container */
+.share-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* Copy Button */
+.share-buttons button {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  background: #6366f1;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.share-buttons button:hover {
+  background: #4f46e5;
+  transform: translateY(-2px);
+}
+
+/* WhatsApp */
+.share-buttons a:nth-child(2) {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  background: #25d366;
+  color: white;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s ease;
+}
+
+.share-buttons a:nth-child(2):hover {
+  transform: translateY(-2px);
+}
+
+/* Email */
+.share-buttons a:nth-child(3) {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s ease;
+}
+
+.share-buttons a:nth-child(3):hover {
+  transform: translateY(-2px);
+}
+
+/* Close button */
+.close-btn {
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: none;
+  background: #ef4444;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.close-btn:hover {
+  background: #dc2626;
+}/* ACTION BUTTONS */
+.note-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Common Button Style */
+.view-btn,
+.delete-btn,
+.share-btn {
+  min-width: 90px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+/* View Button */
+.view-btn {
+  background: #2563eb;
+  color: white;
+}
+
+.view-btn:hover {
+  background: #1e40af;
+  transform: translateY(-2px);
+}
+
+/* Delete Button */
+.delete-btn {
+  background: #ef4444;
+  color: white;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+}
+
+/* Share Button */
+.share-btn {
+  background: linear-gradient(90deg, #7c3aed, #ec4899);
+  color: white;
+}
+
+.share-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(124, 58, 237, 0.3);
+}

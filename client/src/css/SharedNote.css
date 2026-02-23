@@ -1,0 +1,81 @@
+/* ================= PAGE BACKGROUND ================= */
+.shared-note-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #eef2ff, #f8fafc);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+/* ================= NOTE CARD ================= */
+.shared-note-card {
+  background: white;
+  width: 100%;
+  max-width: 750px;
+  padding: 40px;
+  border-radius: 18px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+  transition: 0.3s ease;
+}
+
+.shared-note-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+}
+
+/* ================= TITLE ================= */
+.shared-note-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #1e293b;
+}
+
+/* ================= DESCRIPTION ================= */
+.shared-note-description {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #475569;
+  margin-bottom: 25px;
+}
+
+/* ================= ATTACHMENT BUTTON ================= */
+.attachment-btn {
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #7c3aed, #ec4899);
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.3s ease;
+}
+
+.attachment-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(124, 58, 237, 0.3);
+}
+
+/* ================= LOADING STATE ================= */
+.loading-text {
+  font-size: 20px;
+  font-weight: 500;
+  text-align: center;
+  margin-top: 100px;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 600px) {
+  .shared-note-card {
+    padding: 25px;
+  }
+
+  .shared-note-title {
+    font-size: 22px;
+  }
+
+  .shared-note-description {
+    font-size: 14px;
+  }
+}

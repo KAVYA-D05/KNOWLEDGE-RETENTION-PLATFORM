@@ -1,0 +1,30 @@
+.topic-details-content {
+  padding: 30px;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: #2563eb;
+  cursor: pointer;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.topic-details-card {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.topic-details-card h2 {
+  margin-bottom: 15px;
+  color: #0f172a;
+}
+
+.topic-details-card p {
+  line-height: 1.7;
+  margin-bottom: 12px;
+  color: #475569;
+}

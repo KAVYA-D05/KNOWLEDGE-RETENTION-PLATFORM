@@ -1,0 +1,184 @@
+/* ================= MAIN CONTAINER ================= */
+
+.create-quiz-container {
+  max-width: 900px;
+  margin: 40px auto;
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+}
+
+.create-quiz-container h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 28px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+/* ================= INPUTS ================= */
+
+.create-quiz-container input,
+.create-quiz-container textarea,
+.create-quiz-container select {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 18px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.create-quiz-container textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.create-quiz-container input:focus,
+.create-quiz-container textarea:focus,
+.create-quiz-container select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* ================= ACCESS CONTROL ================= */
+
+.access-control {
+  background: #f1f5f9;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.access-control label {
+  font-weight: 500;
+  color: #334155;
+}
+
+.access-control input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+/* ================= QUESTIONS ================= */
+
+.question-box {
+  background: #f9fafb;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  border: 1px solid #e5e7eb;
+  transition: 0.3s ease;
+}
+
+.question-box:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+/* ================= BUTTONS ================= */
+
+.add-btn {
+  padding: 10px 18px;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.add-btn:hover {
+  background: #4f46e5;
+}
+
+.remove-btn {
+  padding: 8px 14px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.remove-btn:hover {
+  background: #dc2626;
+}
+
+.submit-btn {
+  padding: 12px 25px;
+  background: linear-gradient(90deg, #2563eb, #1e40af);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: 0.3s ease;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(37, 99, 235, 0.3);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+  .create-quiz-container {
+    padding: 25px;
+  }
+}
+/* ================= VISIBILITY SECTION ================= */
+
+.visibility-section {
+  margin-top: 20px;
+  margin-bottom: 25px;
+}
+
+.visibility-section h4 {
+  margin-bottom: 15px;
+  color: #1e293b;
+}
+
+.visibility-options {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.visibility-card {
+  flex: 1;
+  min-width: 180px;
+  padding: 18px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.visibility-card p {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 5px;
+}
+
+.visibility-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.visibility-card.active {
+  border: 2px solid #2563eb;
+  background: #eff6ff;
+}
+
+.email-input {
+  margin-top: 15px;
+}

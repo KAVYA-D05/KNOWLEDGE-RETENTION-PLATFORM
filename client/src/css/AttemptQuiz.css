@@ -1,0 +1,162 @@
+.attempt-container {
+  padding: 50px;
+  background: #f4f6f9;
+  min-height: 90vh;
+}
+
+.attempt-container h2 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.quiz-info {
+  margin-bottom: 30px;
+  color: #666;
+}
+
+.question-card {
+  background: white;
+  padding: 20px;
+  margin-bottom: 25px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+.question-card h4 {
+  margin-bottom: 15px;
+}
+
+.option {
+  margin-bottom: 8px;
+}
+
+.option input {
+  margin-right: 10px;
+}
+
+.submit-btn {
+  background: #2563eb;
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.submit-btn:hover {
+  background: #1d4ed8;
+}
+
+.result-box {
+  margin-top: 30px;
+  padding: 20px;
+  background: #dcfce7;
+  border-radius: 12px;
+  text-align: center;
+}
+.correct {
+  background: #dcfce7;
+}
+
+.wrong {
+  background: #fee2e2;
+}
+
+.timer {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #dc2626;
+}
+.attempt-container {
+  max-width: 900px;
+  margin: 40px auto;
+  background: white;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+}
+
+.timer-box {
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.question-card {
+  margin-bottom: 20px;
+  padding: 20px;
+  background: #f9fafb;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+.option-item {
+  margin-top: 8px;
+}
+
+.submit-btn {
+  padding: 12px 25px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: 0.3s ease;
+}
+
+.submit-btn:hover {
+  background: #1e40af;
+}
+.timer-box {
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 10px;
+  background: #e2e8f0;
+}
+
+.timer-box.warning {
+  background: #fef9c3;
+  color: #92400e;
+}
+
+.timer-box.danger {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.progress-box {
+  margin-bottom: 20px;
+  font-weight: 500;
+  color: #334155;
+}
+
+.result-page {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 40px;
+  text-align: center;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+}
+
+.result-page button {
+  padding: 12px 20px;
+  margin-top: 20px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
