@@ -11,7 +11,7 @@ function Dashboard() {
   const email = localStorage.getItem("email");
   const [attempts, setAttempts] = useState([]);
   const [search, setSearch] = useState("");
-  const API = "https://knowledge-retention-platform-1.onrender.com";
+  
   // 1. Stabilize fetchAttempts with useCallback to fix ESLint/Netlify build error
   const fetchAttempts = useCallback(async () => {
     try {

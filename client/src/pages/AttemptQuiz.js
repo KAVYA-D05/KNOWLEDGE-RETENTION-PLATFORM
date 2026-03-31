@@ -14,7 +14,7 @@ function AttemptQuiz() {
   const [submitted, setSubmitted] = useState(false);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
-const API = "https://knowledge-retention-platform-1.onrender.com";
+
   const email = localStorage.getItem("email");
 
   /* ================= FETCH QUIZ ================= */

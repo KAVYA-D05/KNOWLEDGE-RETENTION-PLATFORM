@@ -11,7 +11,6 @@ function SharedQuiz() {
   const [timeLeft, setTimeLeft] = useState(0);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
-const API = "https://knowledge-retention-platform-1.onrender.com";
   const email = localStorage.getItem("email") || "guest_user@quizapp.com";
 
   const fetchQuiz = useCallback(async () => {

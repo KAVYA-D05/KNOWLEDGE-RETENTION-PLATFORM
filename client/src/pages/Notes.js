@@ -5,7 +5,6 @@ import "../css/Notes.css";
 import API from "../utils/api";
 function Notes() {
   const email = localStorage.getItem("email");
-const API = "https://knowledge-retention-platform-1.onrender.com";
   const [notes, setNotes] = useState([]);
   const [search, setSearch] = useState("");
   const [title, setTitle] = useState("");

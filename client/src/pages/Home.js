@@ -8,7 +8,7 @@ function Home() {
   const navigate = useNavigate();
   const username = localStorage.getItem("username") || "Learner";
   const email = localStorage.getItem("email");
-const API = "https://knowledge-retention-platform-1.onrender.com";
+
   const [notesCount, setNotesCount] = useState(0);
   const [quizCount, setQuizCount] = useState(0);
   const [loading, setLoading] = useState(true);

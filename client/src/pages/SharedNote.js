@@ -8,7 +8,6 @@ function SharedNote() {
   const { id } = useParams();
   const [note, setNote] = useState(null);
   const [error, setError] = useState(false);
-const API = "https://knowledge-retention-platform-1.onrender.com";
   useEffect(() => {
     axios.get(`${API}/api/notes/shared/${id}`)
       .then((res) => setNote(res.data))
