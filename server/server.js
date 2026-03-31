@@ -4,6 +4,7 @@ import session from "express-session";
 import passport from "passport";
 import cors from "cors";
 import mongoose from "mongoose";
+import path from "path";
 
 import "./config/passport.js";
 import googleAuthRoutes from "./routes/googleAuthRoutes.js";
@@ -11,23 +12,39 @@ import noteRoutes from "./routes/noteRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js"; 
 import quizRoutes from "./routes/quizRoutes.js";
-import path from "path";
+
 const app = express();
 
-/* ================== MIDDLEWARE ================== */
+/* ================== CORS CONFIGURATION ================== */
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://knowledge-retention-platform.netlify.app"
+];
+
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      return callback(new Error('CORS error: This origin is not allowed.'), false);
+    }
+    return callback(null, true);
+  },
   credentials: true,
 }));
 
+/* ================== MIDDLEWARE ================== */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "secretkey",
+    secret: process.env.SESSION_SECRET || "fallback_secret_for_dev",
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production", // true if using HTTPS
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    }
   })
 );
 
@@ -35,15 +52,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 /* ================== ROUTES ================== */
-// This matches your frontend calls to http://localhost:5000/api/register
 app.use("/auth", googleAuthRoutes);
 app.use("/api", userRoutes);
 app.use("/api", profileRoutes); 
 app.use("/api/notes", noteRoutes);
-app.use("/uploads", express.static("uploads"));
-
 app.use("/api/quizzes", quizRoutes);
 app.use("/uploads", express.static("uploads"));
+
 /* ================== DATABASE ================== */
 mongoose
   .connect(process.env.MONGO_URI)
@@ -52,5 +67,3 @@ mongoose
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-
-

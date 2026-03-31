@@ -1,3 +1,5 @@
-const API = process.env.REACT_APP_API_URL || "https://knowledge-retention-platform-1.onrender.com";
+const API = window.location.hostname === "localhost" 
+  ? "http://localhost:5000" 
+  : "https://knowledge-retention-platform-1.onrender.com";
 
 export default API;
