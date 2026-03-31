@@ -98,6 +98,7 @@ function Notes() {
                   type="file"
                   accept=".pdf,.doc,.docx"
                   onChange={(e) => setFile(e.target.files[0])}
+                  required
                 />
               </div>
 
