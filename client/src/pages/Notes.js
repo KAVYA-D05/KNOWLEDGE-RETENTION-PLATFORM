@@ -15,6 +15,8 @@ function Notes() {
   const [shareLink, setShareLink] = useState("");
   const [fileType, setFileType] = useState("");
 
+  // ✅ FIX ADDED HERE (IMPORTANT)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchNotes();
   }, []);
@@ -64,13 +66,11 @@ function Notes() {
 
   return (
     <>
-      {/* ✅ Navbar OUTSIDE */}
       <Navbar />
 
       <div className="notes-page">
         <div className="notes-container">
 
-          {/* CREATE NOTE */}
           <section className="create-note-box">
             <h3>Create New Note</h3>
             <form onSubmit={handleSubmit}>
@@ -106,7 +106,6 @@ function Notes() {
             </form>
           </section>
 
-          {/* HEADER */}
           <div className="notes-header">
             <h2>My Notes</h2>
             <input
@@ -117,7 +116,6 @@ function Notes() {
             />
           </div>
 
-          {/* NOTES LIST */}
           <div className="notes-list">
             {notes
               .filter((n) =>
@@ -163,7 +161,6 @@ function Notes() {
           </div>
         </div>
 
-        {/* SHARE MODAL */}
         {shareModal && (
           <div className="share-overlay">
             <div className="share-modal">

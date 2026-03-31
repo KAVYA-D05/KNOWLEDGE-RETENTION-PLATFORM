@@ -13,6 +13,8 @@ function Home() {
   const [quizCount, setQuizCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  // ✅ FIX ADDED HERE (IMPORTANT)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (email) {
       fetchStats();
