@@ -72,8 +72,8 @@ router.get("/share-link/:id", async (req, res) => {
     const BACKEND = process.env.BACKEND_URL || "https://knowledge-retention-platform-1.onrender.com";
     
     // Encodes spaces so "File Name.pdf" becomes "File%20Name.pdf"
-    const safeFileName = encodeURIComponent(note.fileName);
-    const fileLink = `${BACKEND}/uploads/${safeFileName}`;
+   const safeFileName = encodeURIComponent(note.fileName);
+const fileLink = `${BACKEND}/uploads/${safeFileName}`;
 
     res.json({ shareLink: fileLink });
   } catch (err) {
