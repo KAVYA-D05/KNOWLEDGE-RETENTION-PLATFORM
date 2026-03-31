@@ -20,7 +20,10 @@ const allowedOrigins = [
   "http://localhost:3000",
   "https://knowledge-retention-platform.netlify.app"
 ];
+import path from "path";
 
+// This tells Express that anything in the 'uploads' folder is public
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
@@ -57,7 +60,7 @@ app.use("/api", userRoutes);
 app.use("/api", profileRoutes); 
 app.use("/api/notes", noteRoutes);
 app.use("/api/quizzes", quizRoutes);
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
 /* ================== DATABASE ================== */
 mongoose
   .connect(process.env.MONGO_URI)
