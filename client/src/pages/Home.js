@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react"; // Added useCallback
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import "../css/Home.css";
@@ -13,18 +13,15 @@ function Home() {
   const [quizCount, setQuizCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  // ✅ FIX ADDED HERE (IMPORTANT)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    if (email) {
-      fetchStats();
-    } else {
+  // 1. Wrap fetchStats in useCallback to stabilize the reference for the build
+  const fetchStats = useCallback(async () => {
+    if (!email) {
       setLoading(false);
+      return;
     }
-  }, [email]);
-
-  const fetchStats = async () => {
+    
     try {
+      // Running both requests in parallel for better performance
       const [notesRes, quizRes] = await Promise.all([
         axios.get(`http://localhost:5000/api/notes/my/${email}`),
         axios.get(`http://localhost:5000/api/quizzes/attempts/${email}`)
@@ -32,11 +29,16 @@ function Home() {
       setNotesCount(notesRes.data.length);
       setQuizCount(quizRes.data.length);
     } catch (err) {
-      console.error("Failed to fetch stats");
+      console.error("Failed to fetch stats", err);
     } finally {
       setLoading(false);
     }
-  };
+  }, [email]); // Only changes if email changes
+
+  // 2. Safely call fetchStats in useEffect
+  useEffect(() => {
+    fetchStats();
+  }, [fetchStats]);
 
   return (
     <div className="home-container">
@@ -102,6 +104,7 @@ function Home() {
                 consolidation, ensuring that what you learn today stays with you 
                 for years to come.
               </p>
+              
             </div>
           </div>
         </section>

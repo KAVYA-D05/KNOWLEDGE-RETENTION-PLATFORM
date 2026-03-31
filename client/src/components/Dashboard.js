@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react"; // Added useCallback
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import "../css/Dashboard.css";
@@ -12,21 +12,30 @@ function Dashboard() {
   const [attempts, setAttempts] = useState([]);
   const [search, setSearch] = useState("");
 
-  useEffect(() => { fetchAttempts(); }, []);
-
-  const fetchAttempts = async () => {
+  // 1. Stabilize fetchAttempts with useCallback to fix ESLint/Netlify build error
+  const fetchAttempts = useCallback(async () => {
     try {
+      // Note: Ensure this URL matches your backend route exactly
       const res = await axios.get(`http://localhost:5000/api/quizzes/attempts/${email}`);
       setAttempts(res.data);
-    } catch (err) { console.log("Failed to fetch"); }
-  };
+    } catch (err) {
+      console.error("Failed to fetch attempts", err);
+    }
+  }, [email]);
+
+  // 2. useEffect now safely depends on the stabilized fetchAttempts
+  useEffect(() => {
+    fetchAttempts();
+  }, [fetchAttempts]);
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this attempt record?")) return;
     try {
       await axios.delete(`http://localhost:5000/api/quizzes/attempt/${id}`);
       fetchAttempts();
-    } catch (error) { console.log("Delete failed"); }
+    } catch (error) {
+      console.error("Delete failed", error);
+    }
   };
 
   /* Analytics Calculations */
@@ -37,8 +46,8 @@ function Dashboard() {
 
   const chartData = attempts.map((a) => ({
     topic: a.topic.length > 10 ? a.topic.substring(0, 10) + ".." : a.topic,
-    score: a.score === 0 ? 0.1 : a.score, // Small value to show a tiny bar for 0 scores
-    displayScore: a.score // Real value for the tooltip
+    score: a.score === 0 ? 0.1 : a.score, 
+    displayScore: a.score 
   }));
 
   const pieData = [
