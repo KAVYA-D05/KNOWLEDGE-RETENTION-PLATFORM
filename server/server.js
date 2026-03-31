@@ -11,7 +11,7 @@ import noteRoutes from "./routes/noteRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js"; 
 import quizRoutes from "./routes/quizRoutes.js";
-
+import path from "path";
 const app = express();
 
 /* ================== MIDDLEWARE ================== */
@@ -43,7 +43,7 @@ app.use("/api/notes", noteRoutes);
 app.use("/uploads", express.static("uploads"));
 
 app.use("/api/quizzes", quizRoutes);
-
+app.use("/uploads", express.static("uploads"));
 /* ================== DATABASE ================== */
 mongoose
   .connect(process.env.MONGO_URI)
@@ -52,3 +52,5 @@ mongoose
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
+
