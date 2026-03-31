@@ -1,53 +1,55 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import "../css/SharedQuiz.css";
 
 function SharedQuiz() {
   const { slugToken } = useParams();
-
   const [quiz, setQuiz] = useState(null);
   const [answers, setAnswers] = useState([]);
   const [timeLeft, setTimeLeft] = useState(0);
   const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const email = localStorage.getItem("email") || "sharedUser@gmail.com";
+  const email = localStorage.getItem("email") || "guest_user@quizapp.com";
+
+  const fetchQuiz = useCallback(async () => {
+    try {
+      const res = await axios.get(`http://localhost:5000/api/quizzes/shared/${slugToken}`);
+      setQuiz(res.data);
+      setTimeLeft((res.data.timeLimit || 10) * 60);
+    } catch (err) {
+      alert("This quiz link has expired or is invalid.");
+    } finally {
+      setLoading(false);
+    }
+  }, [slugToken]);
 
   useEffect(() => {
     fetchQuiz();
-  }, []);
+  }, [fetchQuiz]);
 
-  const fetchQuiz = async () => {
+  const handleSubmit = useCallback(async () => {
+    if (result) return;
     try {
-      const res = await axios.get(
-        `http://localhost:5000/api/quizzes/shared/${slugToken}`
-      );
-
-      setQuiz(res.data);
-
-      const totalSeconds = (res.data.timeLimit || 10) * 60;
-      setTimeLeft(totalSeconds);
-
+      const res = await axios.post(`http://localhost:5000/api/quizzes/submit/${quiz._id}`, {
+        answers,
+        userEmail: email,
+      });
+      setResult(res.data);
     } catch (err) {
-      alert("Invalid or expired link");
+      alert(err.response?.data?.message || "Submission failed");
     }
-  };
+  }, [quiz, answers, email, result]);
 
-  /* ================= TIMER ================= */
   useEffect(() => {
-    if (!quiz || result) return;
-
-    if (timeLeft <= 0) {
-      handleSubmit();
+    if (!quiz || result || timeLeft <= 0) {
+      if (timeLeft === 0 && quiz && !result) handleSubmit();
       return;
     }
-
-    const timer = setInterval(() => {
-      setTimeLeft(prev => prev - 1);
-    }, 1000);
-
+    const timer = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
     return () => clearInterval(timer);
-  }, [timeLeft, quiz, result]);
+  }, [timeLeft, quiz, result, handleSubmit]);
 
   const formatTime = () => {
     const min = Math.floor(timeLeft / 60);
@@ -55,87 +57,73 @@ function SharedQuiz() {
     return `${min}:${sec < 10 ? "0" : ""}${sec}`;
   };
 
-  const handleSubmit = async () => {
-    try {
-      const res = await axios.post(
-        `http://localhost:5000/api/quizzes/submit/${quiz._id}`,
-        {
-          answers,
-          userEmail: email,
-        }
-      );
-
-      setResult(res.data);
-
-    } catch (err) {
-      alert(err.response?.data?.message || "Submission failed");
-    }
-  };
-
-  if (!quiz) return <h2 className="loading">Loading...</h2>;
+  if (loading) return <div className="full-page-loader"><div className="spinner"></div><p>Loading Assessment...</p></div>;
 
   if (result) {
     return (
-      <div className="result-container">
-        <div className="result-card">
-          <h2>🎉 Quiz Completed</h2>
-          <h3>{quiz.topic}</h3>
-          <p>
-            Score: {result.score} / {result.total}
-          </p>
+      <div className="shared-page-wrapper">
+        <div className="result-card-modern">
+          <div className="icon-badge">🎯</div>
+          <h2>Quiz Completed!</h2>
+          <p className="topic-sub">{quiz.topic}</p>
+          <div className="final-score">
+            <span className="obtained">{result.score}</span>
+            <span className="divider">/</span>
+            <span className="total">{result.total}</span>
+          </div>
+          <p className="congrats-msg">Great effort! You've successfully finished the assessment.</p>
+          <button className="btn-primary-modern" onClick={() => window.location.href = '/'}>Finish</button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="shared-container">
-
-      <div className="quiz-card-modern">
-
-        <div className="quiz-header-modern">
-          <h2>{quiz.topic}</h2>
-          <div
-            className={`timer ${
-              timeLeft <= 30
-                ? "danger"
-                : timeLeft <= 60
-                ? "warning"
-                : ""
-            }`}
-          >
-            ⏳ {formatTime()}
+    <div className="shared-page-wrapper">
+      <div className="quiz-container-modern">
+        <header className="shared-quiz-header">
+          <div className="header-info">
+            <h1>{quiz.topic}</h1>
+            <p>{quiz.questions.length} Questions • {quiz.difficulty}</p>
           </div>
+          <div className={`modern-timer ${timeLeft < 60 ? 'blink' : ''}`}>
+             <span className="t-label">Ends in</span>
+             <span className="t-time">{formatTime()}</span>
+          </div>
+        </header>
+
+        <div className="question-stack">
+          {quiz.questions.map((q, index) => (
+            <div key={index} className="modern-q-card">
+              <div className="q-num-pill">Question {index + 1}</div>
+              <h3 className="q-text-shared">{q.question}</h3>
+              <div className="options-grid-shared">
+                {q.options.map((opt, i) => (
+                  <label key={i} className={`opt-item ${answers[index] === i ? 'active' : ''}`}>
+                    <input
+                      type="radio"
+                      name={`q-${index}`}
+                      checked={answers[index] === i}
+                      onChange={() => {
+                        const newAnswers = [...answers];
+                        newAnswers[index] = i;
+                        setAnswers(newAnswers);
+                      }}
+                    />
+                    <span className="opt-indicator"></span>
+                    <span className="opt-val">{opt}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
 
-        {quiz.questions.map((q, index) => (
-          <div key={index} className="question-block">
-            <h4>{index + 1}. {q.question}</h4>
-
-            {q.options.map((opt, i) => (
-              <label key={i} className="option-modern">
-                <input
-                  type="radio"
-                  name={`question-${index}`}
-                  onChange={() => {
-                    const newAnswers = [...answers];
-                    newAnswers[index] = i;
-                    setAnswers(newAnswers);
-                  }}
-                />
-                <span>{opt}</span>
-              </label>
-            ))}
-          </div>
-        ))}
-
-        <button
-          className="submit-modern"
-          onClick={handleSubmit}
-        >
-          Submit Quiz
-        </button>
-
+        <footer className="shared-footer-action">
+           <button className="submit-modern-btn" onClick={handleSubmit}>
+              Submit My Answers
+           </button>
+        </footer>
       </div>
     </div>
   );

@@ -11,3 +11,30 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+/* LIGHT THEME (Default) */
+:root {
+  --bg-page: #f8fafc;
+  --bg-card: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --border-color: #e2e8f0;
+  --nav-bg: rgba(255, 255, 255, 0.9);
+  --accent: #7c3aed;
+}
+
+/* DARK THEME Overrides */
+[data-theme='dark'] {
+  --bg-page: #0f172a;        /* Deep Navy/Black */
+  --bg-card: #1e293b;        /* Slate Blue */
+  --text-primary: #f8fafc;   /* Off White */
+  --text-secondary: #94a3b8; /* Grey Blue */
+  --border-color: #334155;
+  --nav-bg: rgba(15, 23, 42, 0.9);
+  --accent: #a78bfa;
+}
+
+body {
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  transition: all 0.3s ease; /* Smooth fade when switching */
+}

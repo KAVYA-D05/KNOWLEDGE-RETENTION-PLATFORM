@@ -7,10 +7,8 @@ import "../css/Quiz.css";
 function Quiz() {
   const [quizzes, setQuizzes] = useState([]);
   const [search, setSearch] = useState("");
-
   const [shareModal, setShareModal] = useState(false);
   const [shareData, setShareData] = useState(null);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,25 +20,18 @@ function Quiz() {
       const res = await axios.get("http://localhost:5000/api/quizzes");
       setQuizzes(res.data);
     } catch (err) {
-      console.log("Failed to load quizzes");
+      console.error("Failed to load quizzes");
     }
   };
 
-  /* ================= SHARE FUNCTION ================= */
   const handleShare = async (id) => {
     try {
-      const res = await axios.put(
-        `http://localhost:5000/api/quizzes/share/${id}`
-      );
-
+      const res = await axios.put(`http://localhost:5000/api/quizzes/share/${id}`);
       setShareData({
         link: res.data.shareLink,
-        expiresAt: res.data.expiresAt
-          ? new Date(res.data.expiresAt)
-          : null,
+        expiresAt: res.data.expiresAt ? new Date(res.data.expiresAt) : null,
         quizId: id,
       });
-
       setShareModal(true);
     } catch (err) {
       alert("Share failed");
@@ -49,10 +40,8 @@ function Quiz() {
 
   const handleRevoke = async () => {
     try {
-      await axios.put(
-        `http://localhost:5000/api/quizzes/revoke/${shareData.quizId}`
-      );
-      alert("Link revoked");
+      await axios.put(`http://localhost:5000/api/quizzes/revoke/${shareData.quizId}`);
+      alert("Link revoked successfully");
       setShareModal(false);
     } catch (err) {
       alert("Revoke failed");
@@ -64,141 +53,104 @@ function Quiz() {
   );
 
   return (
-    <>
+    <div className="quiz-container">
       <Navbar />
-
-      <div className="quiz-page">
-        {/* HEADER */}
-        <div className="quiz-header">
-          <h2>📘 Quiz Dashboard</h2>
-
-          <button
-            className="create-quiz-btn"
-            onClick={() => navigate("/create-quiz")}
-          >
-            + Create Quiz
+      
+      <main className="quiz-content">
+        {/* TOP BAR */}
+        <header className="quiz-page-header">
+          <div className="header-text">
+            <h1>Quiz Library</h1>
+            <p>Challenge your knowledge and track your progress.</p>
+          </div>
+          <button className="create-btn-premium" onClick={() => navigate("/create-quiz")}>
+            <span>+</span> New Assessment
           </button>
-        </div>
+        </header>
 
-        {/* SEARCH */}
-        <div className="quiz-search">
+        {/* SEARCH BAR */}
+        <div className="search-wrapper">
+          <div className="search-icon"></div>
           <input
             type="text"
-            placeholder="Search quizzes..."
+            className="modern-search"
+            placeholder="🔍Search by topic, keyword, or difficulty..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
 
-        {/* GRID */}
+        {/* QUIZ GRID */}
         <div className="quiz-grid">
           {filteredQuizzes.length === 0 ? (
-            <p className="empty-text">No quizzes available</p>
+            <div className="empty-state">
+              <p>No assessments found matching your search.</p>
+            </div>
           ) : (
             filteredQuizzes.map((quiz) => (
-              <div className="quiz-card" key={quiz._id}>
-                <div>
-                  <h3>{quiz.topic}</h3>
-                  <p>
-                    {quiz.description || "No description provided."}
-                  </p>
-
-                  <div className="quiz-meta">
-                    <span>⏱ {quiz.timeLimit || 10} mins</span>
-                    <span>🎯 {quiz.difficulty || "Medium"}</span>
+              <div className="quiz-card-premium" key={quiz._id}>
+                <div className="card-top">
+                  <div className="difficulty-tag" data-level={quiz.difficulty?.toLowerCase()}>
+                    {quiz.difficulty || "General"}
                   </div>
+                  <h3>{quiz.topic}</h3>
+                  <p className="description">{quiz.description || "Master this topic with our curated assessment questions."}</p>
                 </div>
 
-                <div className="quiz-actions">
-                  <button
-                    className="attempt-btn"
-                    onClick={() =>
-                      navigate(`/attempt-quiz/${quiz._id}`)
-                    }
-                  >
-                    Attempt Quiz
-                  </button>
-
-                  <button
-                    className="share-btn"
-                    onClick={() => handleShare(quiz._id)}
-                  >
-                    Share 🔗
-                  </button>
+                <div className="card-footer">
+                  <div className="meta-info">
+                    <span>⏱ {quiz.timeLimit || 10}m</span>
+                    <span>📝 {quiz.questions?.length || 0} Qs</span>
+                  </div>
+                  <div className="action-row">
+                    <button className="btn-attempt" onClick={() => navigate(`/attempt-quiz/${quiz._id}`)}>
+                      Start Quiz
+                    </button>
+                    <button className="btn-share-icon" title="Share Quiz" onClick={() => handleShare(quiz._id)}>
+                      🔗
+                    </button>
+                  </div>
                 </div>
               </div>
             ))
           )}
         </div>
-      </div>
+      </main>
 
-      {/* ================= SHARE MODAL ================= */}
+      {/* SHARE MODAL */}
       {shareModal && shareData && (
-        <div className="share-overlay">
-          <div className="share-modal">
-
-            <div className="modal-header">
-              <h3>Share Quiz</h3>
-              <span
-                className="close-btn"
-                onClick={() => setShareModal(false)}
-              >
-                ✖
-              </span>
+        <div className="share-overlay" onClick={() => setShareModal(false)}>
+          <div className="share-modal-premium" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-head">
+              <h3>Share Assessment</h3>
+              <button className="close-x" onClick={() => setShareModal(false)}>&times;</button>
             </div>
+            
+            <p className="modal-sub">Anyone with this link can attempt the quiz.</p>
 
-            <div className="share-link-box">
-              <input
-                type="text"
-                value={shareData.link}
-                readOnly
-              />
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(shareData.link);
-                  alert("Link copied!");
-                }}
-              >
-                📋 Copy
-              </button>
+            <div className="link-copy-area">
+              <input type="text" value={shareData.link} readOnly />
+              <button onClick={() => {
+                navigator.clipboard.writeText(shareData.link);
+                alert("Copied to clipboard!");
+              }}>Copy</button>
             </div>
 
             {shareData.expiresAt && (
-              <p className="expiry-text">
-                ⏳ Expires on: {shareData.expiresAt.toLocaleString()}
-              </p>
+              <div className="expiry-notice">
+                ⏳ Link valid until: <strong>{shareData.expiresAt.toLocaleString()}</strong>
+              </div>
             )}
 
-            <div className="share-buttons">
-
-              <a
-                href={`https://wa.me/?text=📘 Try this quiz:%0A${shareData.link}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="whatsapp-btn"
-              >
-                📲 WhatsApp
-              </a>
-
-              <a
-                href={`mailto:?subject=Quiz Invitation&body=Try this quiz: ${shareData.link}`}
-                className="email-btn"
-              >
-                📧 Email
-              </a>
-
-              <button
-                className="revoke-btn"
-                onClick={handleRevoke}
-              >
-                ❌ Revoke Link
-              </button>
-
+            <div className="social-row">
+              <a href={`https://wa.me/?text=Check out this quiz: ${shareData.link}`} target="_blank" rel="noreferrer" className="s-btn wa">WhatsApp</a>
+              <a href={`mailto:?subject=Quiz Invitation&body=${shareData.link}`} className="s-btn em">Email</a>
+              <button className="s-btn rv" onClick={handleRevoke}>Revoke</button>
             </div>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
 

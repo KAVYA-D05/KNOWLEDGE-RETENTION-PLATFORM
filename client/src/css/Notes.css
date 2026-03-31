@@ -1,17 +1,92 @@
-/* PAGE BACKGROUND */
+/* ================= GLOBAL & BACKGROUND ================= */
+:root {
+  --primary-blue: #2563eb;
+  --primary-gradient: linear-gradient(90deg, #7c3aed, #ec4899);
+  --bg-color: #f4f6f9;
+  --card-bg: #ffffff;
+  --text-dark: #1e293b;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+}
+
 .notes-page {
-  background: #f4f6f9;
+  background: var(--bg-color);
   min-height: 100vh;
+  font-family: 'Inter', sans-serif;
 }
 
-/* MAIN CONTAINER */
+/* ================= MAIN LAYOUT ================= */
 .notes-container {
-  padding: 40px;
-  max-width: 1200px;
-  margin: auto;
+  display: grid;
+  grid-template-columns: 380px 1fr; /* Fixed Sidebar + Flexible Content */
+  gap: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  align-items: start;
 }
 
-/* ================= HEADER ================= */
+/* ================= SIDEBAR: CREATE NOTE BOX ================= */
+.create-note-box {
+  background: var(--card-bg);
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-color);
+  position: sticky;
+  top: 100px; /* Stays visible while scrolling notes */
+}
+
+.create-note-box h3 {
+  margin-bottom: 20px;
+  font-size: 22px;
+  color: var(--text-dark);
+}
+
+.create-note-box form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.create-note-box input[type="text"],
+.create-note-box textarea {
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  font-size: 14px;
+  background: #fcfdfe;
+}
+
+.create-note-box textarea {
+  resize: none;
+  height: 120px;
+}
+
+.create-note-box input:focus,
+.create-note-box textarea:focus {
+  border-color: var(--primary-blue);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.create-note-box button {
+  background: var(--primary-blue);
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.create-note-box button:hover {
+  background: #1e40af;
+  transform: translateY(-2px);
+}
+
+/* ================= CONTENT: WORKSPACE & GRID ================= */
 .notes-header {
   display: flex;
   justify-content: space-between;
@@ -21,384 +96,208 @@
 
 .notes-header h2 {
   font-size: 28px;
-  font-weight: 600;
+  color: var(--text-dark);
 }
 
-/* SEARCH */
 .notes-header input {
-  padding: 10px 14px;
-  width: 260px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  outline: none;
-  transition: 0.3s;
+  padding: 12px 18px;
+  width: 300px;
+  border-radius: 25px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
 }
 
-.notes-header input:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
-}
-
-/* ================= CREATE NOTE BOX ================= */
-.create-note-box {
-  background: #ffffff;
-  padding: 25px;
-  border-radius: 14px;
-  margin-bottom: 35px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-}
-
-.create-note-box h3 {
-  margin-bottom: 18px;
-  font-size: 20px;
-}
-
-.create-note-box form {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.create-note-box input[type="text"],
-.create-note-box textarea,
-.create-note-box input[type="file"] {
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  font-size: 14px;
-}
-
-.create-note-box textarea {
-  resize: none;
-  height: 90px;
-}
-
-.create-note-box input:focus,
-.create-note-box textarea:focus {
-  border-color: #2563eb;
-  outline: none;
-}
-
-/* ADD BUTTON */
-.create-note-box button {
-  background: linear-gradient(to right, #2563eb, #1e40af);
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: 0.3s;
-}
-
-.create-note-box button:hover {
-  opacity: 0.9;
-}
-
-/* ================= NOTES LIST ================= */
+/* THE GRID SYSTEM */
 .notes-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
 }
 
-/* NOTE CARD */
+/* ================= NOTE CARD ================= */
 .note-card {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 14px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  background: var(--card-bg);
+  padding: 24px;
+  border-radius: 18px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--border-color);
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
   transition: 0.3s;
 }
 
 .note-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
 }
 
-/* NOTE INFO */
 .note-info h4 {
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   font-size: 18px;
+  color: var(--text-dark);
 }
 
 .note-info p {
   font-size: 14px;
-  color: #555;
-  margin-bottom: 6px;
+  color: var(--text-muted);
+  line-height: 1.6;
 }
 
-.note-info span {
-  font-size: 12px;
-  color: #888;
-}
-
-/* ACTION BUTTONS */
+/* ================= ACTION BUTTONS ================= */
 .note-actions {
   display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.view-btn {
-  background: #2563eb;
-  color: white;
-  padding: 6px 14px;
-  border-radius: 6px;
-  font-size: 13px;
-  text-decoration: none;
-  transition: 0.3s;
-}
-
-.view-btn:hover {
-  background: #1e40af;
-}
-
-.delete-btn {
-  background: #ef4444;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 13px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.delete-btn:hover {
-  background: #dc2626;
-}
-
-.no-file {
-  font-size: 13px;
-  color: #999;
-}
-
-/* EMPTY STATE */
-.no-notes {
-  text-align: center;
-  color: #777;
-  margin-top: 20px;
-  font-size: 15px;
-}
-.share-btn {
-  background: #7c3aed;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.share-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.share-modal {
-  background: white;
-  padding: 30px;
-  border-radius: 14px;
-  width: 400px;
-  text-align: center;
-}
-
-.share-buttons {
-  display: flex;
-  justify-content: space-between;
-  margin: 15px 0;
-}
-
-.close-btn {
-  margin-top: 10px;
-}
-/* ================= SHARE MODAL ================= */
-
-.share-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.share-modal {
-  background: white;
-  padding: 30px;
-  border-radius: 18px;
-  width: 420px;
-  max-width: 90%;
-  text-align: center;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    transform: scale(0.9);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.share-modal h3 {
-  margin-bottom: 20px;
-  font-size: 22px;
-  font-weight: 600;
-  color: #1e293b;
-}
-
-/* Link box */
-.share-modal input {
-  width: 100%;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  margin-bottom: 20px;
-  font-size: 14px;
-}
-
-/* Share buttons container */
-.share-buttons {
-  display: flex;
-  justify-content: space-between;
   gap: 10px;
+  margin-top: 20px;
+}
+
+.view-btn, .delete-btn, .share-btn {
+  flex: 1;
+  height: 38px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.view-btn { background: #eff6ff; color: var(--primary-blue); }
+.delete-btn { background: #fef2f2; color: #ef4444; }
+.share-btn { background: var(--primary-gradient); color: white; border: none; }
+
+.view-btn:hover { background: #dbeafe; }
+.delete-btn:hover { background: #fee2e2; }
+.share-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+/* ================= MODAL & OVERLAY ================= */
+/* ================= PROFESSIONAL SHARE MODAL ================= */
+.share-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.7); /* Darker backdrop for focus */
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.share-modal {
+  background: #ffffff;
+  padding: 32px;
+  border-radius: 24px;
+  width: 100%;
+  max-width: 460px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  position: relative;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.modal-header h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.close-x {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.modal-subtitle {
+  color: #64748b;
+  font-size: 14px;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+/* INPUT GROUP */
+.share-input-group {
+  display: flex;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 8px;
+  margin-bottom: 24px;
+  align-items: center;
+}
+
+.share-input-group input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #334155;
+  outline: none;
+}
+
+.copy-btn-inner {
+  background: #1e293b;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+
+/* SOCIAL ROW */
+.share-actions-row {
+  display: flex;
+  gap: 12px;
   margin-bottom: 20px;
 }
 
-/* Copy Button */
-.share-buttons button {
+.share-social-btn {
   flex: 1;
-  padding: 8px;
-  border-radius: 8px;
-  border: none;
-  background: #6366f1;
-  color: white;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
-.share-buttons button:hover {
-  background: #4f46e5;
-  transform: translateY(-2px);
-}
-
-/* WhatsApp */
-.share-buttons a:nth-child(2) {
-  flex: 1;
-  padding: 8px;
-  border-radius: 8px;
-  background: #25d366;
-  color: white;
+  padding: 12px;
+  border-radius: 12px;
   text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: 0.2s;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: 0.3s ease;
 }
 
-.share-buttons a:nth-child(2):hover {
-  transform: translateY(-2px);
-}
-
-/* Email */
-.share-buttons a:nth-child(3) {
-  flex: 1;
-  padding: 8px;
-  border-radius: 8px;
-  background: #2563eb;
+.share-social-btn.whatsapp {
+  background: #22c55e;
   color: white;
-  text-decoration: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: 0.3s ease;
 }
 
-.share-buttons a:nth-child(3):hover {
-  transform: translateY(-2px);
+.share-social-btn.email {
+  background: #f1f5f9;
+  color: #475569;
 }
 
-/* Close button */
-.close-btn {
-  padding: 8px 18px;
-  border-radius: 8px;
-  border: none;
-  background: #ef4444;
-  color: white;
+.modal-done-btn {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  color: #64748b;
+  font-weight: 600;
   cursor: pointer;
-  transition: 0.3s ease;
 }
 
-.close-btn:hover {
-  background: #dc2626;
-}/* ACTION BUTTONS */
-.note-actions {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-/* Common Button Style */
-.view-btn,
-.delete-btn,
-.share-btn {
-  min-width: 90px;
-  height: 36px;
-  padding: 0 14px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
-/* View Button */
-.view-btn {
-  background: #2563eb;
-  color: white;
-}
-
-.view-btn:hover {
-  background: #1e40af;
-  transform: translateY(-2px);
-}
-
-/* Delete Button */
-.delete-btn {
-  background: #ef4444;
-  color: white;
-}
-
-.delete-btn:hover {
-  background: #dc2626;
-  transform: translateY(-2px);
-}
-
-/* Share Button */
-.share-btn {
-  background: linear-gradient(90deg, #7c3aed, #ec4899);
-  color: white;
-}
-
-.share-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(124, 58, 237, 0.3);
+.modal-done-btn:hover {
+  background: #f8fafc;
 }

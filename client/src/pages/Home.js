@@ -11,24 +11,28 @@ function Home() {
 
   const [notesCount, setNotesCount] = useState(0);
   const [quizCount, setQuizCount] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchStats();
-  }, []);
+    if (email) {
+      fetchStats();
+    } else {
+      setLoading(false);
+    }
+  }, [email]);
 
   const fetchStats = async () => {
     try {
-      const notesRes = await axios.get(
-        `http://localhost:5000/api/notes/my/${email}`
-      );
+      const [notesRes, quizRes] = await Promise.all([
+        axios.get(`http://localhost:5000/api/notes/my/${email}`),
+        axios.get(`http://localhost:5000/api/quizzes/attempts/${email}`)
+      ]);
       setNotesCount(notesRes.data.length);
-
-      const quizRes = await axios.get(
-        `http://localhost:5000/api/quizzes/attempts/${email}`
-      );
       setQuizCount(quizRes.data.length);
     } catch (err) {
-      console.log("Failed to fetch stats");
+      console.error("Failed to fetch stats");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -37,24 +41,22 @@ function Home() {
       <Navbar />
 
       <main className="home-content">
-
         {/* HERO SECTION */}
         <section className="hero-section">
-          <h1>Welcome back, {username} 👋</h1>
-          <p>
-            Build powerful learning habits. Strengthen memory. Track growth.
-            Transform knowledge into long-term mastery.
+          <div className="badge">Welcome back, {username} 👋</div>
+          <h1>Master Your Mind with <span className="text-gradient">Active Learning</span></h1>
+          <p className="hero-subtitle">
+            Don't just read—retain. We combine <strong>Spaced Repetition</strong> and 
+            <strong> Active Recall</strong> to help you turn fleeting information into 
+            permanent expertise.
           </p>
 
           <div className="hero-buttons">
-            <button onClick={() => navigate("/dashboard")}>
-              📊 Dashboard
+            <button className="btn-primary" onClick={() => navigate("/quiz")}>
+              🚀 Start Quiz
             </button>
-            <button onClick={() => navigate("/quiz")}>
-              🧠 Take Quiz
-            </button>
-            <button onClick={() => navigate("/notes")}>
-              📝 My Notes
+            <button className="btn-secondary" onClick={() => navigate("/notes")}>
+              📝 Review Notes
             </button>
           </div>
         </section>
@@ -62,74 +64,70 @@ function Home() {
         {/* STATS SECTION */}
         <section className="stats-section">
           <div className="stat-card">
-            <h2>{notesCount}</h2>
-            <p>Total Notes Created</p>
+            <div className="stat-icon">📚</div>
+            <h2>{loading ? "..." : notesCount}</h2>
+            <p>Notes Mastered</p>
           </div>
 
           <div className="stat-card">
-            <h2>{quizCount}</h2>
+            <div className="stat-icon">🎯</div>
+            <h2>{loading ? "..." : quizCount}</h2>
             <p>Quizzes Attempted</p>
           </div>
 
           <div className="stat-card">
+            <div className="stat-icon">🔥</div>
             <h2>∞</h2>
             <p>Learning Potential</p>
           </div>
         </section>
 
-        {/* WHY SECTION */}
+        {/* KNOWLEDGE INSIGHT */}
         <section className="knowledge-section">
-          <h2>Why Knowledge Retention Matters</h2>
-
-          <p>
-            Learning without retention is temporary. True mastery happens
-            when information moves from short-term memory into long-term
-            understanding.
-          </p>
-
-          <p>
-            This platform is built on active recall and spaced repetition —
-            two scientifically proven techniques that significantly enhance
-            memory consolidation and conceptual clarity.
-          </p>
-
-          <p>
-            Through structured notes, interactive quizzes, and performance
-            analytics, you don’t just study — you build lasting knowledge.
-          </p>
+          <div className="knowledge-header">
+            <h2>The Science of Mastery</h2>
+            <div className="line-dec"></div>
+          </div>
+          <div className="knowledge-grid">
+            <div className="knowledge-text">
+              <p>
+                Passive reading is the enemy of memory. Research shows that 
+                <strong> 70% of new information is forgotten within 24 hours</strong> 
+                unless it is actively retrieved.
+              </p>
+              <p>
+                Our platform structures your study sessions to trigger memory 
+                consolidation, ensuring that what you learn today stays with you 
+                for years to come.
+              </p>
+            </div>
+          </div>
         </section>
 
         {/* FEATURES SECTION */}
         <section className="features-section">
           <div className="feature-box">
-            <h3>🧠 Active Recall</h3>
-            <p>
-              Strengthen memory pathways by testing yourself regularly
-              instead of passive reading.
-            </p>
+            <div className="feature-emoji">🧠</div>
+            <h3>Active Recall</h3>
+            <p>Stop re-reading. Force your brain to retrieve information, building stronger neural pathways.</p>
           </div>
 
           <div className="feature-box">
-            <h3>📈 Performance Analytics</h3>
-            <p>
-              Visual insights help you identify strengths and areas needing
-              improvement.
-            </p>
+            <div className="feature-emoji">📈</div>
+            <h3>Data-Driven Growth</h3>
+            <p>Track your accuracy and identify conceptual gaps with detailed performance metrics.</p>
           </div>
 
           <div className="feature-box">
-            <h3>📂 Structured Notes</h3>
-            <p>
-              Organize your learning in a systematic way for easy revision
-              and reference.
-            </p>
+            <div className="feature-emoji">📂</div>
+            <h3>Smart Architecture</h3>
+            <p>Systematically organize complex topics into digestible modules for effortless review.</p>
           </div>
         </section>
-
       </main>
 
       <footer className="home-footer">
-        <p>© 2026 Knowledge Retention Platform | Learn Smart. Retain Forever.</p>
+        <p>© 2026 Knowledge Retention Platform | Precision Learning for Modern Minds.</p>
       </footer>
     </div>
   );

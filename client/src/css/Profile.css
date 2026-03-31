@@ -1,103 +1,180 @@
+
+
 .profile-container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: #f4f6f9;
   padding: 40px 20px;
 }
+
 .profile-card {
-  width: 900px;
-  max-width: 95%;
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+  width: 950px;
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
   display: flex;
-  padding: 50px;
-  gap: 40px;
+  overflow: hidden;
+  border: 1px solid #f1f5f9;
 }
 
+/* SIDEBAR SECTION */
 .profile-left {
   width: 35%;
+  background: #fcfdfe;
+  border-right: 1px solid #f1f5f9;
+  padding: 50px 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  border-right: 1px solid #eee;
-  padding-right: 30px;
-}
-.profile-image-wrapper {
-  margin-bottom: 15px;
-}
-
-.profile-img {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
+  text-align: center;
 }
 
 .profile-placeholder {
-  width: 120px;
-  height: 120px;
-  background: #1e2a38;
+  width: 110px;
+  height: 110px;
+  background: #7c3aed; 
   color: white;
-  font-size: 45px;
+  font-size: 40px;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
+  border-radius: 32px;
+  box-shadow: 0 10px 20px rgba(124, 58, 237, 0.2);
+  margin-bottom: 20px;
 }
 
-.file-input {
-  margin-top: 10px;
+.status-badge {
+  background: #ecfdf5;
+  color: #059669;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.user-info-brief h3 {
+  margin: 20px 0 5px;
+  font-size: 22px;
+  color: #1e293b;
+}
+
+.user-info-brief p {
+  color: #64748b;
   font-size: 14px;
 }
 
-.profile-left h3 {
-  margin-top: 15px;
-  font-size: 22px;
+.profile-stats {
+  display: flex;
+  gap: 15px;
+  margin-top: 40px;
+  width: 100%;
 }
 
-.profile-left p {
-  color: #555;
+.stat-item {
+  flex: 1;
+  background: white;
+  padding: 15px;
+  border-radius: 16px;
+  border: 1px solid #f1f5f9;
 }
 
+.stat-num {
+  display: block;
+  font-size: 18px;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* MAIN CONTENT SECTION */
 .profile-right {
   width: 65%;
-  display: flex;
-  flex-direction: column;
+  padding: 50px;
 }
 
-.profile-right label {
-  margin-top: 15px;
-  font-weight: 600;
+.form-header {
+  margin-bottom: 35px;
 }
 
-.profile-right input {
-  margin-top: 6px;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+.form-header h2 {
+  font-size: 26px;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 8px;
 }
 
-.profile-right button {
-  margin-top: 25px;
-  padding: 10px;
-  border: none;
-  background: #1e2a38;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
+.form-header p {
+  color: #64748b;
   font-size: 15px;
 }
 
-.profile-right button:hover {
-  background: #2c3e50;
+.detail-group {
+  margin-bottom: 24px;
 }
 
-.success-msg {
-  margin-top: 20px;
-  color: green;
+.detail-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.static-value {
+  font-size: 16px;
   font-weight: 600;
+  color: #1e293b;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+/* SECURITY BOX */
+.security-info-box {
+  margin-top: 10px;
+  background: #f8fafc;
+  padding: 20px;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+}
+
+.security-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.security-item:last-child { margin-bottom: 0; }
+
+.security-item strong { color: #475569; font-weight: 600; }
+.security-item span { color: #059669; font-weight: 700; }
+.security-item span.highlight { color: #7c3aed; }
+
+.footer-note {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.footer-note p {
+  font-size: 13px;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
+/* RESPONSIVE */
+@media (max-width: 850px) {
+  .profile-card { flex-direction: column; width: 100%; }
+  .profile-left { width: 100%; border-right: none; border-bottom: 1px solid #f1f5f9; }
+  .profile-right { width: 100%; padding: 40px 25px; }
 }

@@ -6,96 +6,99 @@ import "../css/Profile.css";
 function Profile() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [updated, setUpdated] = useState(false);
+  const [stats, setStats] = useState({ notes: 0, quizzes: 0 });
 
-  /* Load email from localStorage */
   useEffect(() => {
     const storedEmail = localStorage.getItem("email");
-    if (storedEmail) {
-      setEmail(storedEmail);
-    }
+    const storedName = localStorage.getItem("username");
+    if (storedEmail) setEmail(storedEmail);
+    if (storedName) setName(storedName);
   }, []);
 
-  /* Fetch profile when email changes */
   useEffect(() => {
     if (!email) return;
 
-    axios
-      .get(`http://localhost:5000/api/profile/${email}`)
-      .then((res) => {
-        setName(res.data.name || "");
-        setPhone(res.data.phone || "");
-      })
-      .catch((err) => {
-        console.log("Fetch error:", err);
-      });
-
+    // Fetch Analytics for the sidebar and main view
+    const fetchStats = async () => {
+      try {
+        const notesRes = await axios.get(`http://localhost:5000/api/notes/my/${email}`);
+        const quizRes = await axios.get(`http://localhost:5000/api/quizzes/attempts/${email}`);
+        setStats({ notes: notesRes.data.length, quizzes: quizRes.data.length });
+      } catch (e) {
+        console.log("Stats fetch failed");
+      }
+    };
+    fetchStats();
   }, [email]);
 
-  const handleUpdate = async () => {
-    try {
-      const res = await axios.put(
-        `http://localhost:5000/api/profile/${email}`,
-        { name, phone }
-      );
-
-      // Update navbar name
-      localStorage.setItem("username", res.data.user.name);
-
-      setUpdated(true);
-
-    } catch (error) {
-      console.log(error);
-      alert("Profile update failed");
-    }
-  };
-
   return (
-    <div>
+    <div className="profile-page">
       <Navbar />
 
       <div className="profile-container">
         <div className="profile-card">
-
+          
+          {/* LEFT SIDE: PERSONAL IDENTITY */}
           <div className="profile-left">
-            <div className="profile-placeholder">
-              {name ? name.charAt(0).toUpperCase() : "U"}
+            <div className="avatar-section">
+              <div className="profile-placeholder">
+                {name ? name.charAt(0).toUpperCase() : "U"}
+              </div>
+              <div className="status-badge">Verified Member</div>
             </div>
-            <h3>{name}</h3>
-            <p>{email}</p>
+            
+            <div className="user-info-brief">
+              <h3>{name || "User"}</h3>
+              <p>{email}</p>
+            </div>
+
+            <div className="profile-stats">
+              <div className="stat-item">
+                <span className="stat-num">{stats.notes}</span>
+                <span className="stat-label">Notes</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-num">{stats.quizzes}</span>
+                <span className="stat-label">Quizzes</span>
+              </div>
+            </div>
           </div>
 
+          {/* RIGHT SIDE: VIEW-ONLY ACCOUNT DETAILS */}
           <div className="profile-right">
-            <label>Full Name</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-                setUpdated(false);
-              }}
-            />
+            <div className="form-header">
+              <h2>Profile Overview</h2>
+              <p>Basic account information and system credentials.</p>
+            </div>
 
-            <label>Phone Number</label>
-            <input
-              type="text"
-              value={phone}
-              onChange={(e) => {
-                setPhone(e.target.value);
-                setUpdated(false);
-              }}
-            />
+            <div className="detail-group">
+              <label>Full Name</label>
+              <div className="static-value">{name || "Not Set"}</div>
+            </div>
 
-            {!updated ? (
-              <button onClick={handleUpdate}>
-                Update Profile
-              </button>
-            ) : (
-              <p className="success-msg">
-                Profile Updated Successfully ✅
-              </p>
-            )}
+            <div className="detail-group">
+              <label>Registered Email</label>
+              <div className="static-value">{email}</div>
+            </div>
+
+            <div className="detail-group">
+               <label>Account Security</label>
+               <div className="security-info-box">
+                  <div className="security-item">
+                    <strong>Account Status:</strong> <span>Active</span>
+                  </div>
+                  <div className="security-item">
+                    <strong>Access Level:</strong> <span className="highlight">Standard User</span>
+                  </div>
+                  <div className="security-item">
+                    <strong>Login Method:</strong> <span>Email / Password</span>
+                  </div>
+               </div>
+            </div>
+
+            <div className="footer-note">
+              <p>Contact your administrator to request changes to your primary account details.</p>
+            </div>
           </div>
 
         </div>

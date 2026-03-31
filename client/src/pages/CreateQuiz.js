@@ -8,20 +8,13 @@ function CreateQuiz() {
   const [description, setDescription] = useState("");
   const [difficulty, setDifficulty] = useState("Easy");
   const [timeLimit, setTimeLimit] = useState(10);
-
-  /* ================= VISIBILITY ================= */
-  const [visibility, setVisibility] = useState("private"); 
+  const [visibility, setVisibility] = useState("private");
   const [allowedEmails, setAllowedEmails] = useState("");
-
   const [questions, setQuestions] = useState([
-    {
-      question: "",
-      options: ["", "", "", ""],
-      correctAnswer: 0,
-    },
+    { question: "", options: ["", "", "", ""], correctAnswer: 0 },
   ]);
 
-  const email = localStorage.getItem("email");
+  const creatorEmail = localStorage.getItem("email");
 
   const handleQuestionChange = (index, value) => {
     const updated = [...questions];
@@ -42,190 +35,147 @@ function CreateQuiz() {
   };
 
   const addQuestion = () => {
-    setQuestions([
-      ...questions,
-      { question: "", options: ["", "", "", ""], correctAnswer: 0 },
-    ]);
+    setQuestions([...questions, { question: "", options: ["", "", "", ""], correctAnswer: 0 }]);
   };
 
   const removeQuestion = (index) => {
-    const updated = questions.filter((_, i) => i !== index);
-    setQuestions(updated);
+    setQuestions(questions.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async () => {
+    if (!topic || questions[0].question === "") {
+      return alert("Please fill in the topic and at least one question.");
+    }
+
     try {
-      const emailArray =
-        visibility === "specific"
-          ? allowedEmails.split(",").map((e) => e.trim())
-          : [];
+      const emailArray = visibility === "specific" 
+        ? allowedEmails.split(",").map((e) => e.trim()) 
+        : [];
 
       await axios.post("http://localhost:5000/api/quizzes", {
         topic,
         description,
         difficulty,
         timeLimit: Number(timeLimit),
-        createdBy: email,
+        createdBy: creatorEmail,
         questions,
         isPublic: visibility === "public",
         allowedEmails: emailArray,
       });
 
-      alert("Quiz Created Successfully 🎉");
-
-      setTopic("");
-      setDescription("");
-      setDifficulty("Easy");
-      setTimeLimit(10);
-      setVisibility("private");
-      setAllowedEmails("");
-      setQuestions([
-        { question: "", options: ["", "", "", ""], correctAnswer: 0 },
-      ]);
-
+      alert("Quiz Published Successfully! 🚀");
+      window.location.reload(); // Refresh to clear state
     } catch (error) {
-      console.error(error);
-      alert("Quiz creation failed");
+      alert("Error publishing quiz.");
     }
   };
 
   return (
-    <div>
+    <div className="create-page-wrapper">
       <Navbar />
+      
+      <div className="creator-container">
+        {/* LEFT COLUMN: SETTINGS */}
+        <aside className="creator-sidebar">
+          <div className="sticky-sidebar">
+            <h3>Assessment Settings</h3>
+            <p className="sidebar-hint">Configure how your quiz appears to others.</p>
+            
+            <label>Quiz Topic</label>
+            <input type="text" placeholder="e.g. React Fundamentals" value={topic} onChange={(e) => setTopic(e.target.value)} />
 
-      <div className="create-quiz-container">
-        <h2>Create New Quiz</h2>
+            <label>Description</label>
+            <textarea placeholder="Briefly describe the quiz..." value={description} onChange={(e) => setDescription(e.target.value)} />
 
-        <input
-          type="text"
-          placeholder="Quiz Topic"
-          value={topic}
-          onChange={(e) => setTopic(e.target.value)}
-        />
-
-        <textarea
-          placeholder="Quiz Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-
-        <select
-          value={difficulty}
-          onChange={(e) => setDifficulty(e.target.value)}
-        >
-          <option value="Easy">Easy</option>
-          <option value="Medium">Medium</option>
-          <option value="Hard">Hard</option>
-        </select>
-
-        <input
-          type="number"
-          placeholder="Time Limit (minutes)"
-          value={timeLimit}
-          onChange={(e) => setTimeLimit(e.target.value)}
-        />
-
-        {/* ================= VISIBILITY ================= */}
-
-        <div className="visibility-section">
-          <h4>Quiz Visibility</h4>
-
-          <div className="visibility-options">
-
-            <div
-              className={`visibility-card ${visibility === "public" ? "active" : ""}`}
-              onClick={() => setVisibility("public")}
-            >
-              🌍 Public
-              <p>Anyone with link can attempt</p>
+            <div className="settings-row">
+              <div className="input-group">
+                <label>Difficulty</label>
+                <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
+                  <option>Easy</option>
+                  <option>Medium</option>
+                  <option>Hard</option>
+                </select>
+              </div>
+              <div className="input-group">
+                <label>Duration (Min)</label>
+                <input type="number" value={timeLimit} onChange={(e) => setTimeLimit(e.target.value)} />
+              </div>
             </div>
 
-            <div
-              className={`visibility-card ${visibility === "private" ? "active" : ""}`}
-              onClick={() => setVisibility("private")}
-            >
-              🔒 Private
-              <p>Only you can access</p>
+            <div className="visibility-area">
+              <label>Visibility</label>
+              <div className="vis-toggle">
+                <button className={visibility === "public" ? "active" : ""} onClick={() => setVisibility("public")}>Public</button>
+                <button className={visibility === "private" ? "active" : ""} onClick={() => setVisibility("private")}>Private</button>
+                <button className={visibility === "specific" ? "active" : ""} onClick={() => setVisibility("specific")}>Limited</button>
+              </div>
+              {visibility === "specific" && (
+                <input 
+                  type="text" 
+                  className="email-tag-input" 
+                  placeholder="user1@mail.com, user2@mail.com" 
+                  value={allowedEmails} 
+                  onChange={(e) => setAllowedEmails(e.target.value)} 
+                />
+              )}
             </div>
 
-            <div
-              className={`visibility-card ${visibility === "specific" ? "active" : ""}`}
-              onClick={() => setVisibility("specific")}
-            >
-              👥 Specific Users
-              <p>Allow selected email IDs</p>
-            </div>
+            <button className="publish-btn" onClick={handleSubmit}>Publish Assessment</button>
+          </div>
+        </aside>
 
+        {/* RIGHT COLUMN: QUESTIONS */}
+        <main className="question-editor">
+          <div className="editor-header">
+            <h2>Manage Questions</h2>
+            <span className="q-count">{questions.length} Question{questions.length !== 1 ? 's' : ''}</span>
           </div>
 
-          {visibility === "specific" && (
-            <input
-              type="text"
-              placeholder="Enter emails (comma separated)"
-              value={allowedEmails}
-              onChange={(e) => setAllowedEmails(e.target.value)}
-              className="email-input"
-            />
-          )}
-        </div>
+          {questions.map((q, qIndex) => (
+            <div key={qIndex} className="question-card">
+              <div className="q-card-header">
+                <span className="q-number">Question {qIndex + 1}</span>
+                {questions.length > 1 && (
+                  <button className="del-q-btn" onClick={() => removeQuestion(qIndex)}>Remove</button>
+                )}
+              </div>
 
-        <h3>Questions</h3>
-
-        {questions.map((q, qIndex) => (
-          <div key={qIndex} className="question-box">
-
-            <input
-              type="text"
-              placeholder={`Question ${qIndex + 1}`}
-              value={q.question}
-              onChange={(e) =>
-                handleQuestionChange(qIndex, e.target.value)
-              }
-            />
-
-            {q.options.map((option, oIndex) => (
               <input
-                key={oIndex}
+                className="q-input"
                 type="text"
-                placeholder={`Option ${oIndex + 1}`}
-                value={option}
-                onChange={(e) =>
-                  handleOptionChange(qIndex, oIndex, e.target.value)
-                }
+                placeholder="Start typing your question here..."
+                value={q.question}
+                onChange={(e) => handleQuestionChange(qIndex, e.target.value)}
               />
-            ))}
 
-            <select
-              value={q.correctAnswer}
-              onChange={(e) =>
-                handleCorrectAnswer(qIndex, e.target.value)
-              }
-            >
-              <option value={0}>Correct: Option 1</option>
-              <option value={1}>Correct: Option 2</option>
-              <option value={2}>Correct: Option 3</option>
-              <option value={3}>Correct: Option 4</option>
-            </select>
+              <div className="options-grid">
+                {q.options.map((option, oIndex) => (
+                  <div key={oIndex} className={`opt-input-wrapper ${q.correctAnswer === oIndex ? "is-correct" : ""}`}>
+                    <input
+                      type="text"
+                      placeholder={`Option ${oIndex + 1}`}
+                      value={option}
+                      onChange={(e) => handleOptionChange(qIndex, oIndex, e.target.value)}
+                    />
+                    <div 
+                      className="correct-marker" 
+                      onClick={() => handleCorrectAnswer(qIndex, oIndex)}
+                      title="Set as correct answer"
+                    >
+                      {q.correctAnswer === oIndex ? "✔" : ""}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <p className="hint-text">Click the checkmark icon to set the correct answer.</p>
+            </div>
+          ))}
 
-            {questions.length > 1 && (
-              <button
-                className="remove-btn"
-                onClick={() => removeQuestion(qIndex)}
-              >
-                Remove Question
-              </button>
-            )}
-          </div>
-        ))}
-
-        <button className="add-btn" onClick={addQuestion}>
-          Add Question
-        </button>
-
-        <button className="submit-btn" onClick={handleSubmit}>
-          Create Quiz
-        </button>
-
+          <button className="add-q-card-btn" onClick={addQuestion}>
+            + Add Another Question
+          </button>
+        </main>
       </div>
     </div>
   );

@@ -81,48 +81,47 @@ function Notes() {
   };
 
   return (
-    <div className="notes-page">
-      <Navbar />
 
-      <div className="notes-container">
+  <div className="notes-page">
+    <Navbar />
 
+    <div className="notes-container">
+      {/* COLUMN 1: SIDEBAR */}
+      <aside className="create-note-box">
+        <h3>Create New Note</h3>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Note Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+          <textarea
+            placeholder="Write description..."
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            required
+          />
+          <input
+            type="file"
+            accept=".pdf,.doc,.docx"
+            onChange={(e) => setFile(e.target.files[0])}
+          />
+          <button type="submit">+ Add Note</button>
+        </form>
+      </aside>
+
+      {/* COLUMN 2: WORKSPACE (Wrap header and list together) */}
+      <main className="workspace-content">
         <div className="notes-header">
           <h2>My Notes</h2>
           <input
             type="text"
-            placeholder="Search notes..."
+            placeholder="🔍 Search notes..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-        </div>
-
-        <div className="create-note-box">
-          <h3>Create New Note</h3>
-
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              placeholder="Note Title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-            />
-
-            <textarea
-              placeholder="Write description..."
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              required
-            />
-
-            <input
-              type="file"
-              accept=".pdf,.doc,.docx"
-              onChange={(e) => setFile(e.target.files[0])}
-            />
-
-            <button type="submit">+ Add Note</button>
-          </form>
         </div>
 
         <div className="notes-list">
@@ -151,10 +150,7 @@ function Notes() {
                     <span className="no-file">No File</span>
                   )}
 
-                  <button
-                    className="share-btn"
-                    onClick={() => handleShare(note)}
-                  >
+                  <button className="share-btn" onClick={() => handleShare(note)}>
                     Share
                   </button>
 
@@ -168,51 +164,59 @@ function Notes() {
               </div>
             ))}
         </div>
+      </main>
+    </div>
+
+    {/* SHARE MODAL REMAINS OUTSIDE THE GRID */}
+   {/* SHARE MODAL */}
+{shareModal && (
+  <div className="share-overlay">
+    <div className="share-modal">
+      <div className="modal-header">
+        <h3>Share {fileType}</h3>
+        <button className="close-x" onClick={() => setShareModal(false)}>&times;</button>
+      </div>
+      
+      <p className="modal-subtitle">Anyone with this link can view this resource.</p>
+      
+      <div className="share-input-group">
+        <input type="text" value={shareLink} readOnly />
+        <button 
+          className="copy-btn-inner" 
+          onClick={() => {
+            navigator.clipboard.writeText(shareLink);
+            alert("Link copied!");
+          }}
+        >
+          Copy
+        </button>
       </div>
 
-      {/* ================= SHARE MODAL ================= */}
-      {shareModal && (
-        <div className="share-overlay">
-          <div className="share-modal">
-            <h3>Share {fileType}</h3>
+      <div className="share-actions-row">
+        <a 
+          href={`https://wa.me/?text=Check this: ${shareLink}`} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="share-social-btn whatsapp"
+        >
+          WhatsApp
+        </a>
+        <a 
+          href={`mailto:?subject=Shared Resource&body=${shareLink}`} 
+          className="share-social-btn email"
+        >
+          Email
+        </a>
+      </div>
 
-            <input type="text" value={shareLink} readOnly />
-
-            <div className="share-buttons">
-              <button
-                onClick={() =>
-                  navigator.clipboard.writeText(shareLink)
-                }
-              >
-                📋 Copy Link
-              </button>
-
-              <a
-                href={`https://wa.me/?text=Check this document: ${shareLink}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                📲 WhatsApp
-              </a>
-
-              <a
-                href={`mailto:?subject=Shared Document&body=Download here: ${shareLink}`}
-              >
-                📧 Email
-              </a>
-            </div>
-
-            <button
-              className="close-btn"
-              onClick={() => setShareModal(false)}
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
+      <button className="modal-done-btn" onClick={() => setShareModal(false)}>
+        Done
+      </button>
     </div>
-  );
+  </div>
+)}
+  </div>
+);
 }
 
 export default Notes;

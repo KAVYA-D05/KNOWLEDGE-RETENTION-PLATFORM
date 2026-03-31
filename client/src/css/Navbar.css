@@ -1,56 +1,104 @@
+/* ================= MODERN NAVBAR ================= */
 .navbar {
-  height: 70px;               /* Bigger */
-  background-color: #1e2a38;
+  height: 72px;
+  background: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+  backdrop-filter: blur(12px);         /* Glass blur effect */
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 40px;
-  color: white;
   position: fixed;
   width: 100%;
   top: 0;
-  z-index: 1000;
+  left: 0;
+  z-index: 2000;
+  padding: 0;
 }
 
+.navbar-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* LOGO STYLING */
 .navbar-logo {
-  font-size: 22px;            /* Bigger logo */
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 800;
+  color: #1e293b;
   cursor: pointer;
+  letter-spacing: -0.5px;
 }
 
+.navbar-logo span {
+  color: #7c3aed; /* Your signature purple color */
+}
+
+.navbar-user {
+  margin-left: 15px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+/* NAV LINKS */
 .navbar-links {
   list-style: none;
   display: flex;
-  gap: 35px;                  /* More spacing */
+  gap: 8px; /* Gap between buttons */
   margin: 0;
+  padding: 0;
 }
 
 .navbar-links li {
   cursor: pointer;
-  font-size: 16px;
-  transition: 0.3s;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
 }
 
 .navbar-links li:hover {
-  color: #4da3ff;
+  color: #1e293b;
+  background: #f8fafc;
 }
 
+/* ACTIVE LINK STATE */
+.navbar-links li.active {
+  color: #7c3aed;
+  background: rgba(124, 58, 237, 0.1);
+}
+
+/* LOGOUT BUTTON */
 .navbar-logout {
-  background-color: #ff4d4d;
+  background-color: #1e293b; /* Dark, professional button */
   border: none;
-  padding: 8px 18px;
+  padding: 10px 20px;
   color: white;
-  border-radius: 6px;
+  border-radius: 10px;
   cursor: pointer;
-  font-size: 14px;
-  transition: 0.3s;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s;
 }
 
 .navbar-logout:hover {
-  background-color: #e60000;
+  background-color: #ef4444; /* Turns red only on hover */
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
 }
-.navbar-user {
-  margin-left: 20px;
-  font-size: 14px;
-  color: #cbd5e1;
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .navbar-links { display: none; } /* Consider a hamburger menu later */
+  .navbar-user { display: none; }
 }
