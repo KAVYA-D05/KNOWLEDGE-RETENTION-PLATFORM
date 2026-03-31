@@ -1,69 +1,73 @@
-/* ================= MODERN NAVBAR ================= */
+/* ================= FIXED NAVBAR ================= */
 .navbar {
-  height: 72px;
-  background: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
-  backdrop-filter: blur(12px);         /* Glass blur effect */
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-  display: flex;
-  align-items: center;
-  position: fixed;
-  width: 100%;
+  position: fixed; /* Keep it at the top */
   top: 0;
   left: 0;
+  right: 0;
+  height: 72px;    /* Uniform height for all pages */
+  background: white;
   z-index: 2000;
-  padding: 0;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #eef2f6;
 }
 
 .navbar-container {
   width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 40px;
+  max-width: 1200px; /* Aligns with your Profile/Quiz content width */
+  margin: 0 auto;    /* Centers the logo and links */
+  padding: 0 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+/* ================= LEFT SECTION (LOGO & GREETING) ================= */
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
 
-/* LOGO STYLING */
 .navbar-logo {
   font-size: 20px;
   font-weight: 800;
-  color: #1e293b;
   cursor: pointer;
-  letter-spacing: -0.5px;
+  color: #1e293b;
+  margin: 0;
+  white-space: nowrap;
 }
 
 .navbar-logo span {
-  color: #7c3aed; /* Your signature purple color */
+  color: #7c3aed; /* The purple accent */
 }
 
 .navbar-user {
-  margin-left: 15px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #64748b;
   background: #f1f5f9;
-  padding: 4px 12px;
+  padding: 6px 14px;
   border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  margin-left: 8px;
 }
 
-/* NAV LINKS */
+/* ================= CENTER SECTION (LINKS) ================= */
 .navbar-links {
-  list-style: none;
   display: flex;
-  gap: 8px; /* Gap between buttons */
+  list-style: none;
+  gap: 8px;
   margin: 0;
   padding: 0;
+  align-items: center;
 }
 
 .navbar-links li {
-  cursor: pointer;
+  padding: 8px 16px;
   font-size: 14px;
   font-weight: 600;
   color: #64748b;
-  padding: 8px 16px;
-  border-radius: 8px;
+  cursor: pointer;
+  border-radius: 10px;
   transition: all 0.2s ease;
 }
 
@@ -72,33 +76,28 @@
   background: #f8fafc;
 }
 
-/* ACTIVE LINK STATE */
 .navbar-links li.active {
   color: #7c3aed;
-  background: rgba(124, 58, 237, 0.1);
+  background: #f5f3ff; /* Softer purple background */
 }
 
-/* LOGOUT BUTTON */
+/* ================= RIGHT SECTION (LOGOUT) ================= */
 .navbar-logout {
-  background-color: #1e293b; /* Dark, professional button */
-  border: none;
-  padding: 10px 20px;
+  background: #1e293b;
   color: white;
+  padding: 10px 22px;
+  border: none;
   border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
   cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-  transition: all 0.2s;
+  transition: transform 0.2s active, background 0.2s;
 }
 
 .navbar-logout:hover {
-  background-color: #ef4444; /* Turns red only on hover */
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+  background: #0f172a;
 }
 
-/* RESPONSIVE */
-@media (max-width: 900px) {
-  .navbar-links { display: none; } /* Consider a hamburger menu later */
-  .navbar-user { display: none; }
+.navbar-logout:active {
+  transform: scale(0.96);
 }

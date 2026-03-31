@@ -8,11 +8,9 @@ function Notes() {
 
   const [notes, setNotes] = useState([]);
   const [search, setSearch] = useState("");
-
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [file, setFile] = useState(null);
-
   const [shareModal, setShareModal] = useState(false);
   const [shareLink, setShareLink] = useState("");
   const [fileType, setFileType] = useState("");
@@ -22,13 +20,14 @@ function Notes() {
   }, []);
 
   const fetchNotes = async () => {
-    const res = await axios.get(
-      `http://localhost:5000/api/notes/my/${email}`
-    );
-    setNotes(res.data);
+    try {
+      const res = await axios.get(`http://localhost:5000/api/notes/my/${email}`);
+      setNotes(res.data);
+    } catch (err) {
+      console.error("Error fetching notes", err);
+    }
   };
 
-  /* ================= CREATE NOTE ================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -36,7 +35,6 @@ function Notes() {
     formData.append("title", title);
     formData.append("description", description);
     formData.append("createdBy", email);
-
     if (file) formData.append("file", file);
 
     await axios.post("http://localhost:5000/api/notes", formData);
@@ -44,179 +42,150 @@ function Notes() {
     setTitle("");
     setDescription("");
     setFile(null);
-
     fetchNotes();
   };
 
-  /* ================= DELETE NOTE ================= */
   const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:5000/api/notes/${id}`);
-    fetchNotes();
+    if (window.confirm("Are you sure you want to delete this note?")) {
+      await axios.delete(`http://localhost:5000/api/notes/${id}`);
+      fetchNotes();
+    }
   };
 
-  /* ================= SHARE NOTE ================= */
   const handleShare = (note) => {
-    let link;
-    let type = "";
-
-    if (note.fileName) {
-      link = `http://localhost:5000/uploads/${note.fileName}`;
-
-      if (note.fileName.endsWith(".pdf")) {
-        type = "PDF Document";
-      } else if (
-        note.fileName.endsWith(".doc") ||
-        note.fileName.endsWith(".docx")
-      ) {
-        type = "Word Document";
-      }
-    } else {
-      link = `http://localhost:3000/shared-note/${note._id}`;
-      type = "Note Page";
-    }
+    let link = note.fileName
+      ? `http://localhost:5000/uploads/${note.fileName}`
+      : `http://localhost:3000/shared-note/${note._id}`;
 
     setShareLink(link);
-    setFileType(type);
+    setFileType(note.fileName ? "File" : "Note Page");
     setShareModal(true);
   };
 
   return (
+    <>
+      {/* ✅ Navbar OUTSIDE */}
+      <Navbar />
 
-  <div className="notes-page">
-    <Navbar />
+      <div className="notes-page">
+        <div className="notes-container">
 
-    <div className="notes-container">
-      {/* COLUMN 1: SIDEBAR */}
-      <aside className="create-note-box">
-        <h3>Create New Note</h3>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Note Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-          <textarea
-            placeholder="Write description..."
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          />
-          <input
-            type="file"
-            accept=".pdf,.doc,.docx"
-            onChange={(e) => setFile(e.target.files[0])}
-          />
-          <button type="submit">+ Add Note</button>
-        </form>
-      </aside>
-
-      {/* COLUMN 2: WORKSPACE (Wrap header and list together) */}
-      <main className="workspace-content">
-        <div className="notes-header">
-          <h2>My Notes</h2>
-          <input
-            type="text"
-            placeholder="🔍 Search notes..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-
-        <div className="notes-list">
-          {notes
-            .filter((note) =>
-              note.title.toLowerCase().includes(search.toLowerCase())
-            )
-            .map((note) => (
-              <div className="note-card" key={note._id}>
-                <div className="note-info">
-                  <h4>{note.title}</h4>
-                  <p>{note.description}</p>
-                </div>
-
-                <div className="note-actions">
-                  {note.fileName ? (
-                    <a
-                      href={`http://localhost:5000/uploads/${note.fileName}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="view-btn"
-                    >
-                      View
-                    </a>
-                  ) : (
-                    <span className="no-file">No File</span>
-                  )}
-
-                  <button className="share-btn" onClick={() => handleShare(note)}>
-                    Share
-                  </button>
-
-                  <button
-                    onClick={() => handleDelete(note._id)}
-                    className="delete-btn"
-                  >
-                    Delete
-                  </button>
-                </div>
+          {/* CREATE NOTE */}
+          <section className="create-note-box">
+            <h3>Create New Note</h3>
+            <form onSubmit={handleSubmit}>
+              <div className="input-group">
+                <input
+                  type="text"
+                  placeholder="Note Title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  required
+                />
               </div>
-            ))}
+
+              <div className="input-group">
+                <textarea
+                  placeholder="Write description..."
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="input-group">
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  onChange={(e) => setFile(e.target.files[0])}
+                />
+              </div>
+
+              <button type="submit">Add Note</button>
+            </form>
+          </section>
+
+          {/* HEADER */}
+          <div className="notes-header">
+            <h2>My Notes</h2>
+            <input
+              type="text"
+              placeholder="🔍 Search notes..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
+          {/* NOTES LIST */}
+          <div className="notes-list">
+            {notes
+              .filter((n) =>
+                n.title.toLowerCase().includes(search.toLowerCase())
+              )
+              .map((note) => (
+                <div className="note-card" key={note._id}>
+                  <div className="note-info">
+                    <h4>{note.title}</h4>
+                    <p>{note.description}</p>
+                  </div>
+
+                  <div className="note-actions">
+                    {note.fileName ? (
+                      <a
+                        href={`http://localhost:5000/uploads/${note.fileName}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="view-btn"
+                      >
+                        View
+                      </a>
+                    ) : (
+                      <span className="view-btn disabled">No File</span>
+                    )}
+
+                    <button
+                      className="share-btn"
+                      onClick={() => handleShare(note)}
+                    >
+                      Share
+                    </button>
+
+                    <button
+                      className="delete-btn"
+                      onClick={() => handleDelete(note._id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+          </div>
         </div>
-      </main>
-    </div>
 
-    {/* SHARE MODAL REMAINS OUTSIDE THE GRID */}
-   {/* SHARE MODAL */}
-{shareModal && (
-  <div className="share-overlay">
-    <div className="share-modal">
-      <div className="modal-header">
-        <h3>Share {fileType}</h3>
-        <button className="close-x" onClick={() => setShareModal(false)}>&times;</button>
-      </div>
-      
-      <p className="modal-subtitle">Anyone with this link can view this resource.</p>
-      
-      <div className="share-input-group">
-        <input type="text" value={shareLink} readOnly />
-        <button 
-          className="copy-btn-inner" 
-          onClick={() => {
-            navigator.clipboard.writeText(shareLink);
-            alert("Link copied!");
-          }}
-        >
-          Copy
-        </button>
-      </div>
+        {/* SHARE MODAL */}
+        {shareModal && (
+          <div className="share-overlay">
+            <div className="share-modal">
+              <h3>Share {fileType}</h3>
 
-      <div className="share-actions-row">
-        <a 
-          href={`https://wa.me/?text=Check this: ${shareLink}`} 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="share-social-btn whatsapp"
-        >
-          WhatsApp
-        </a>
-        <a 
-          href={`mailto:?subject=Shared Resource&body=${shareLink}`} 
-          className="share-social-btn email"
-        >
-          Email
-        </a>
-      </div>
+              <input type="text" value={shareLink} readOnly />
 
-      <button className="modal-done-btn" onClick={() => setShareModal(false)}>
-        Done
-      </button>
-    </div>
-  </div>
-)}
-  </div>
-);
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(shareLink);
+                  alert("Link copied!");
+                }}
+              >
+                Copy
+              </button>
+
+              <button onClick={() => setShareModal(false)}>Close</button>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
+  );
 }
 
 export default Notes;

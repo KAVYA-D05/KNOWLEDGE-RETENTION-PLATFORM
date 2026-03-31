@@ -1,43 +1,33 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";   // 🔥 THIS WAS MISSING
+import { useParams } from "react-router-dom";
 import "../css/SharedNote.css";
+
 function SharedNote() {
   const { id } = useParams();
   const [note, setNote] = useState(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:5000/api/notes/shared/${id}`)
+    axios.get(`http://localhost:5000/api/notes/shared/${id}`)
       .then((res) => setNote(res.data))
-      .catch(() => alert("Note not found"));
+      .catch(() => setError(true));
   }, [id]);
 
-  if (!note) return <h2>Loading...</h2>;
+  if (error) return <div className="shared-page"><h2>Note not found or link expired</h2></div>;
+  if (!note) return <div className="shared-page"><p>Loading note...</p></div>;
 
   return (
-  <div className="shared-note-page">
-    {!note ? (
-      <p className="loading-text">Loading note...</p>
-    ) : (
-      <div className="shared-note-card">
-        <h2 className="shared-note-title">{note.title}</h2>
-        <p className="shared-note-description">{note.description}</p>
-
+    <div className="shared-page">
+      <div className="shared-card">
+        <div className="badge">Shared Note</div>
+        <h1 className="title">{note.title}</h1>
+        <p className="desc">{note.description}</p>
         {note.fileName && (
-          <a
-            href={`http://localhost:5000/uploads/${note.fileName}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="attachment-btn"
-          >
-            📎 View Attachment
-          </a>
+          <a href={`http://localhost:5000/uploads/${note.fileName}`} target="_blank" rel="noreferrer" className="btn"> Download Attachment </a>
         )}
       </div>
-    )}
-  </div>
-);
+    </div>
+  );
 }
-
 export default SharedNote;
