@@ -105,7 +105,7 @@ router.put("/share/:id", async (req, res) => {
     });
 
     res.json({
-      shareLink: `http://localhost:3000/shared-quiz/${slug}-${token}`,
+      shareLink: `https://knowledge-retention-platform.netlify.app/shared-quiz/${slug}-${token}`,
       expiresAt,
     });
 
