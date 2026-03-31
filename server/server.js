@@ -4,7 +4,7 @@ import session from "express-session";
 import passport from "passport";
 import cors from "cors";
 import mongoose from "mongoose";
-import path from "path";
+import path from "path"; // Keep this one at the top
 
 import "./config/passport.js";
 import googleAuthRoutes from "./routes/googleAuthRoutes.js";
@@ -20,10 +20,7 @@ const allowedOrigins = [
   "http://localhost:3000",
   "https://knowledge-retention-platform.netlify.app"
 ];
-import path from "path";
 
-// This tells Express that anything in the 'uploads' folder is public
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
@@ -39,13 +36,16 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve the uploads folder publicly
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "fallback_secret_for_dev",
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === "production", // true if using HTTPS
+      secure: process.env.NODE_ENV === "production", 
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     }
   })
