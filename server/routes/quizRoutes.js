@@ -17,14 +17,22 @@ router.post("/", async (req, res) => {
 
 /* ================= GET ALL QUIZZES ================= */
 router.get("/", async (req, res) => {
-  const quizzes = await Quiz.find();
-  res.json(quizzes);
+  try {
+    const quizzes = await Quiz.find();
+    res.json(quizzes);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch quizzes" });
+  }
 });
 
 /* ================= GET QUIZ BY ID ================= */
 router.get("/:id", async (req, res) => {
-  const quiz = await Quiz.findById(req.params.id);
-  res.json(quiz);
+  try {
+    const quiz = await Quiz.findById(req.params.id);
+    res.json(quiz);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch quiz" });
+  }
 });
 
 /* ================= SUBMIT QUIZ ================= */
@@ -33,6 +41,10 @@ router.post("/submit/:id", async (req, res) => {
     const { answers, userEmail } = req.body;
 
     const quiz = await Quiz.findById(req.params.id);
+
+    if (!quiz) {
+      return res.status(404).json({ message: "Quiz not found" });
+    }
 
     let score = 0;
 
@@ -62,11 +74,15 @@ router.post("/submit/:id", async (req, res) => {
 
 /* ================= GET USER ATTEMPTS ================= */
 router.get("/attempts/:email", async (req, res) => {
-  const attempts = await QuizAttempt.find({
-    userEmail: req.params.email,
-  }).sort({ attemptedAt: -1 });
+  try {
+    const attempts = await QuizAttempt.find({
+      userEmail: req.params.email,
+    }).sort({ attemptedAt: -1 });
 
-  res.json(attempts);
+    res.json(attempts);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch attempts" });
+  }
 });
 
 /* ================= DELETE ATTEMPT ================= */
@@ -79,39 +95,52 @@ router.delete("/attempt/:id", async (req, res) => {
   }
 });
 
-/* ================= SHARE QUIZ (SLUG + TOKEN) ================= */
+/* ================= SHARE QUIZ ================= */
 router.put("/share/:id", async (req, res) => {
   try {
-    const expiresInHours = 24;
-
     const token = crypto.randomBytes(16).toString("hex");
 
     const expiresAt = new Date(
-      Date.now() + expiresInHours * 60 * 60 * 1000
+      Date.now() + 24 * 60 * 60 * 1000 // 24 hours
     );
 
     const quiz = await Quiz.findById(req.params.id);
 
-    // Create slug from topic
+    if (!quiz) {
+      return res.status(404).json({ message: "Quiz not found" });
+    }
+
+    // Create slug
     const slug = quiz.topic
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)/g, "");
 
-    await Quiz.findByIdAndUpdate(req.params.id, {
-      shareToken: token,
-      shareExpiresAt: expiresAt,
-      isPublic: true,
+    // ✅ IMPORTANT: ensure token is saved
+    const updatedQuiz = await Quiz.findByIdAndUpdate(
+      req.params.id,
+      {
+        shareToken: token,
+        shareExpiresAt: expiresAt,
+        isPublic: true,
+      },
+      { new: true }
+    );
+
+    console.log("✅ Token saved:", updatedQuiz.shareToken);
+
+    // ✅ Use production frontend URL
+    const FRONTEND =
+      process.env.FRONTEND_URL ||
+      "https://knowledge-retention-platform.netlify.app";
+
+    res.json({
+      shareLink: `${FRONTEND}/shared-quiz/${slug}-${token}`,
+      expiresAt,
     });
 
-    const FRONTEND = process.env.FRONTEND_URL || "http://localhost:3000";
-
-res.json({
-  shareLink: `${FRONTEND}/shared-quiz/${slug}-${token}`,
-  expiresAt,
-});
-
   } catch (err) {
+    console.error("Share Error:", err);
     res.status(500).json({ message: "Share failed" });
   }
 });
@@ -136,10 +165,13 @@ router.get("/shared/:slugToken", async (req, res) => {
   try {
     const slugToken = req.params.slugToken;
 
-    // Extract token (last part after -)
     const token = slugToken.split("-").pop();
 
+    console.log("🔍 Received token:", token);
+
     const quiz = await Quiz.findOne({ shareToken: token });
+
+    console.log("📦 Found quiz:", quiz);
 
     if (!quiz) {
       return res.status(404).json({ message: "Invalid link" });
@@ -152,6 +184,7 @@ router.get("/shared/:slugToken", async (req, res) => {
     res.json(quiz);
 
   } catch (err) {
+    console.error("Shared Quiz Error:", err);
     res.status(500).json({ message: "Failed to load shared quiz" });
   }
 });
