@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import "../css/Notes.css";
@@ -15,18 +15,20 @@ function Notes() {
   const [shareLink, setShareLink] = useState("");
   const [fileType, setFileType] = useState("");
 
-  useEffect(() => {
-    fetchNotes();
-  }, []);
-
-  const fetchNotes = async () => {
+  // 1. Optimized fetch function to satisfy ESLint
+  const fetchNotes = useCallback(async () => {
     try {
       const res = await axios.get(`http://localhost:5000/api/notes/my/${email}`);
       setNotes(res.data);
     } catch (err) {
       console.error("Error fetching notes", err);
     }
-  };
+  }, [email]);
+
+  // 2. useEffect now has fetchNotes as a stable dependency
+  useEffect(() => {
+    fetchNotes();
+  }, [fetchNotes]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,12 +38,16 @@ function Notes() {
     formData.append("createdBy", email);
     if (file) formData.append("file", file);
 
-    await axios.post("http://localhost:5000/api/notes", formData);
-    setTitle("");
-    setDescription("");
-    setFile(null);
-    e.target.reset(); // Resets file input UI
-    fetchNotes();
+    try {
+      await axios.post("http://localhost:5000/api/notes", formData);
+      setTitle("");
+      setDescription("");
+      setFile(null);
+      e.target.reset(); // Resets file input UI
+      fetchNotes();
+    } catch (err) {
+      console.error("Error adding note", err);
+    }
   };
 
   const handleDelete = async (id) => {
