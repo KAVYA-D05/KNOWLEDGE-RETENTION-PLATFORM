@@ -104,10 +104,12 @@ router.put("/share/:id", async (req, res) => {
       isPublic: true,
     });
 
-    res.json({
-      shareLink: `https://knowledge-retention-platform.netlify.app/shared-quiz/${slug}-${token}`,
-      expiresAt,
-    });
+    const FRONTEND = process.env.FRONTEND_URL || "http://localhost:3000";
+
+res.json({
+  shareLink: `${FRONTEND}/shared-quiz/${slug}-${token}`,
+  expiresAt,
+});
 
   } catch (err) {
     res.status(500).json({ message: "Share failed" });
