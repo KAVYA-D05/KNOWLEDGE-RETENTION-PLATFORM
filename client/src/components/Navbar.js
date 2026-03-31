@@ -15,7 +15,7 @@ function Navbar() {
 
   const handleLogout = async () => {
     try {
-      await axios.get("http://localhost:5000/auth/logout", { withCredentials: true });
+      await axios.get(`${API}/auth/logout`, { withCredentials: true });
     } catch {}
     localStorage.clear();
     navigate("/login");

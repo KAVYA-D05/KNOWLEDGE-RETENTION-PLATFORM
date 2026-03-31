@@ -8,7 +8,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-
+const API = "https://knowledge-retention-platform-1.onrender.com";
   const navigate = useNavigate();
 
   /* ================= NORMAL LOGIN ================= */
@@ -17,7 +17,7 @@ function Login() {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/login",
+        `${API}/api/login`,
         { email, password }
       );
 
@@ -41,7 +41,7 @@ localStorage.setItem("username", res.data.user.name);
 
   /* ================= GOOGLE LOGIN ================= */
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:5000/auth/google";
+    window.location.href = `${API}/auth/google`;
   };
 
   return (

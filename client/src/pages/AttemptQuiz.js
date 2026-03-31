@@ -14,14 +14,14 @@ function AttemptQuiz() {
   const [submitted, setSubmitted] = useState(false);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
-
+const API = "https://knowledge-retention-platform-1.onrender.com";
   const email = localStorage.getItem("email");
 
   /* ================= FETCH QUIZ ================= */
   useEffect(() => {
     const fetchQuiz = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/quizzes/${id}`);
+        const res = await axios.get(`${API}/api/quizzes/${id}`);
         setQuiz(res.data);
         
         const storedTime = localStorage.getItem(`timer-${id}`);
@@ -45,7 +45,7 @@ function AttemptQuiz() {
   const handleSubmit = useCallback(async () => {
     if (submitted) return;
     try {
-      const res = await axios.post(`http://localhost:5000/api/quizzes/submit/${id}`, {
+      const res = await axios.post(`${API}/api/quizzes/submit/${id}`, {
         answers,
         userEmail: email,
       });

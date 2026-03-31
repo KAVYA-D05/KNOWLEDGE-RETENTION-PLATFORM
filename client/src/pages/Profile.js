@@ -21,8 +21,8 @@ function Profile() {
     // Fetch Analytics for the sidebar and main view
     const fetchStats = async () => {
       try {
-        const notesRes = await axios.get(`http://localhost:5000/api/notes/my/${email}`);
-        const quizRes = await axios.get(`http://localhost:5000/api/quizzes/attempts/${email}`);
+        const notesRes = await axios.get(`${API}/api/notes/my/${email}`);
+        const quizRes = await axios.get(`${API}/api/quizzes/attempts/${email}`);
         setStats({ notes: notesRes.data.length, quizzes: quizRes.data.length });
       } catch (e) {
         console.log("Stats fetch failed");

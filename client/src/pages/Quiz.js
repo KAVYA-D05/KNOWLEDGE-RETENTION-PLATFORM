@@ -17,7 +17,7 @@ function Quiz() {
 
   const fetchQuizzes = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/quizzes");
+      const res = await axios.get(`${API}/api/quizzes`);
       setQuizzes(res.data);
     } catch (err) {
       console.error("Failed to load quizzes");
@@ -26,7 +26,7 @@ function Quiz() {
 
   const handleShare = async (id) => {
     try {
-      const res = await axios.put(`http://localhost:5000/api/quizzes/share/${id}`);
+      const res = await axios.put(`${API}/api/quizzes/share/${id}`);
       setShareData({
         link: res.data.shareLink,
         expiresAt: res.data.expiresAt ? new Date(res.data.expiresAt) : null,
@@ -40,7 +40,7 @@ function Quiz() {
 
   const handleRevoke = async () => {
     try {
-      await axios.put(`http://localhost:5000/api/quizzes/revoke/${shareData.quizId}`);
+      await axios.put(`${API}/api/quizzes/revoke/${shareData.quizId}`);
       alert("Link revoked successfully");
       setShareModal(false);
     } catch (err) {

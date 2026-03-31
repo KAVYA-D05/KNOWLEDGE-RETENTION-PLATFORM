@@ -8,7 +8,7 @@ function Home() {
   const navigate = useNavigate();
   const username = localStorage.getItem("username") || "Learner";
   const email = localStorage.getItem("email");
-
+const API = "https://knowledge-retention-platform-1.onrender.com";
   const [notesCount, setNotesCount] = useState(0);
   const [quizCount, setQuizCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -23,8 +23,8 @@ function Home() {
     try {
       // Running both requests in parallel for better performance
       const [notesRes, quizRes] = await Promise.all([
-        axios.get(`http://localhost:5000/api/notes/my/${email}`),
-        axios.get(`http://localhost:5000/api/quizzes/attempts/${email}`)
+        axios.get(`${API}/api/notes/my/${email}`),
+        axios.get(`${API}/api/quizzes/attempts/${email}`)
       ]);
       setNotesCount(notesRes.data.length);
       setQuizCount(quizRes.data.length);

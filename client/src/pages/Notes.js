@@ -5,7 +5,7 @@ import "../css/Notes.css";
 
 function Notes() {
   const email = localStorage.getItem("email");
-
+const API = "https://knowledge-retention-platform-1.onrender.com";
   const [notes, setNotes] = useState([]);
   const [search, setSearch] = useState("");
   const [title, setTitle] = useState("");
@@ -14,11 +14,11 @@ function Notes() {
   const [shareModal, setShareModal] = useState(false);
   const [shareLink, setShareLink] = useState("");
   const [fileType, setFileType] = useState("");
-
+  
   // 1. Optimized fetch function to satisfy ESLint
   const fetchNotes = useCallback(async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/notes/my/${email}`);
+      const res = await axios.get(`${API}/api/notes/my/${email}`);
       setNotes(res.data);
     } catch (err) {
       console.error("Error fetching notes", err);
@@ -39,7 +39,7 @@ function Notes() {
     if (file) formData.append("file", file);
 
     try {
-      await axios.post("http://localhost:5000/api/notes", formData);
+      await axios.post(`${API}/api/notes`, formData);
       setTitle("");
       setDescription("");
       setFile(null);
@@ -52,15 +52,15 @@ function Notes() {
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this note?")) {
-      await axios.delete(`http://localhost:5000/api/notes/${id}`);
+      await axios.delete(`${API}/api/notes/${id}`);
       fetchNotes();
     }
   };
 
   const handleShare = (note) => {
     let link = note.fileName
-      ? `http://localhost:5000/uploads/${note.fileName}`
-      : `http://localhost:3000/shared-note/${note._id}`;
+      ? `${API}/uploads/${note.fileName}`
+      : `${API}/shared-note/${note._id}`;
 
     setShareLink(link);
     setFileType(note.fileName ? "File" : "Note Page");
@@ -110,7 +110,7 @@ function Notes() {
                   </div>
                   <div className="note-actions">
                     {note.fileName ? (
-                      <a href={`http://localhost:5000/uploads/${note.fileName}`} target="_blank" rel="noreferrer" className="view-btn">View</a>
+                      <a href={`${API}/uploads/${note.fileName}`} target="_blank" rel="noreferrer" className="view-btn">View</a>
                     ) : (
                       <span className="view-btn disabled">No File</span>
                     )}

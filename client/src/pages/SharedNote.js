@@ -7,9 +7,9 @@ function SharedNote() {
   const { id } = useParams();
   const [note, setNote] = useState(null);
   const [error, setError] = useState(false);
-
+const API = "https://knowledge-retention-platform-1.onrender.com";
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/notes/shared/${id}`)
+    axios.get(`${API}/api/notes/shared/${id}`)
       .then((res) => setNote(res.data))
       .catch(() => setError(true));
   }, [id]);
@@ -24,7 +24,7 @@ function SharedNote() {
         <h1 className="title">{note.title}</h1>
         <p className="desc">{note.description}</p>
         {note.fileName && (
-          <a href={`http://localhost:5000/uploads/${note.fileName}`} target="_blank" rel="noreferrer" className="btn"> Download Attachment </a>
+          <a href={`${API}/uploads/${note.fileName}`} target="_blank" rel="noreferrer" className="btn"> Download Attachment </a>
         )}
       </div>
     </div>

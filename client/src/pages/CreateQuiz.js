@@ -52,7 +52,7 @@ function CreateQuiz() {
         ? allowedEmails.split(",").map((e) => e.trim()) 
         : [];
 
-      await axios.post("http://localhost:5000/api/quizzes", {
+      await axios.post(`${API}/api/quizzes`, {
         topic,
         description,
         difficulty,

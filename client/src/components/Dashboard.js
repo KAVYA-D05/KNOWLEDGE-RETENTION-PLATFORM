@@ -11,12 +11,12 @@ function Dashboard() {
   const email = localStorage.getItem("email");
   const [attempts, setAttempts] = useState([]);
   const [search, setSearch] = useState("");
-
+  const API = "https://knowledge-retention-platform-1.onrender.com";
   // 1. Stabilize fetchAttempts with useCallback to fix ESLint/Netlify build error
   const fetchAttempts = useCallback(async () => {
     try {
       // Note: Ensure this URL matches your backend route exactly
-      const res = await axios.get(`http://localhost:5000/api/quizzes/attempts/${email}`);
+      const res = await axios.get(`${API}/api/quizzes/attempts/${email}`);
       setAttempts(res.data);
     } catch (err) {
       console.error("Failed to fetch attempts", err);
@@ -31,7 +31,7 @@ function Dashboard() {
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this attempt record?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/quizzes/attempt/${id}`);
+      await axios.delete(`${API}/api/quizzes/attempt/${id}`);
       fetchAttempts();
     } catch (error) {
       console.error("Delete failed", error);

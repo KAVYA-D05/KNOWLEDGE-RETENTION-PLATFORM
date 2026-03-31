@@ -10,12 +10,12 @@ function SharedQuiz() {
   const [timeLeft, setTimeLeft] = useState(0);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
-
+const API = "https://knowledge-retention-platform-1.onrender.com";
   const email = localStorage.getItem("email") || "guest_user@quizapp.com";
 
   const fetchQuiz = useCallback(async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/quizzes/shared/${slugToken}`);
+      const res = await axios.get(`${API}/api/quizzes/shared/${slugToken}`);
       setQuiz(res.data);
       setTimeLeft((res.data.timeLimit || 10) * 60);
     } catch (err) {
@@ -32,7 +32,7 @@ function SharedQuiz() {
   const handleSubmit = useCallback(async () => {
     if (result) return;
     try {
-      const res = await axios.post(`http://localhost:5000/api/quizzes/submit/${quiz._id}`, {
+      const res = await axios.post(`${API}/api/quizzes/submit/${quiz._id}`, {
         answers,
         userEmail: email,
       });

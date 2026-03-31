@@ -10,13 +10,13 @@ function VerifyOTP() {
   const [email, setEmail] = useState(location.state?.email || "");
   const [otp, setOtp] = useState("");
   const [message, setMessage] = useState("");
-
+const API = "https://knowledge-retention-platform-1.onrender.com";
   const handleVerifyOTP = async (e) => {
     e.preventDefault();
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/verify-otp",
+        `${API}/api/verify-otp`,
         { email, otp }
       );
 
