@@ -3,6 +3,7 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import "../css/Notes.css";
 import API from "../utils/api";
+
 function Notes() {
   const email = localStorage.getItem("email");
   const [notes, setNotes] = useState([]);
@@ -10,11 +11,11 @@ function Notes() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [file, setFile] = useState(null);
+  
+  // Modal States
   const [shareModal, setShareModal] = useState(false);
   const [shareLink, setShareLink] = useState("");
-  const [fileType, setFileType] = useState("");
-  
-  // 1. Optimized fetch function to satisfy ESLint
+
   const fetchNotes = useCallback(async () => {
     try {
       const res = await axios.get(`${API}/api/notes/my/${email}`);
@@ -24,7 +25,6 @@ function Notes() {
     }
   }, [email]);
 
-  // 2. useEffect now has fetchNotes as a stable dependency
   useEffect(() => {
     fetchNotes();
   }, [fetchNotes]);
@@ -42,7 +42,7 @@ function Notes() {
       setTitle("");
       setDescription("");
       setFile(null);
-      e.target.reset(); // Resets file input UI
+      e.target.reset(); 
       fetchNotes();
     } catch (err) {
       console.error("Error adding note", err);
@@ -56,14 +56,15 @@ function Notes() {
     }
   };
 
-  const handleShare = (note) => {
-    let link = note.fileName
-      ? `${API}/uploads/${note.fileName}`
-      : `${API}/shared-note/${note._id}`;
-
-    setShareLink(link);
-    setFileType(note.fileName ? "File" : "Note Page");
-    setShareModal(true);
+  // FIXED: This now matches the Backend route we created earlier
+  const handleShare = async (noteId) => {
+    try {
+      const res = await axios.get(`${API}/api/notes/share-link/${noteId}`);
+      setShareLink(res.data.shareLink); // Corrected state setter
+      setShareModal(true);
+    } catch (err) {
+      alert("Could not generate share link. Make sure the backend is updated.");
+    }
   };
 
   return (
@@ -72,7 +73,6 @@ function Notes() {
       <div className="notes-page">
         <div className="notes-container">
           
-          {/* CREATE SECTION */}
           <section className="create-note-box">
             <h3>Create New Note</h3>
             <form onSubmit={handleSubmit}>
@@ -89,7 +89,6 @@ function Notes() {
             </form>
           </section>
 
-          {/* LIST HEADER */}
           <div className="notes-header">
             <h2>My Notes</h2>
             <div className="search-wrapper">
@@ -97,7 +96,6 @@ function Notes() {
             </div>
           </div>
 
-          {/* NOTES GRID */}
           <div className="notes-list">
             {notes
               .filter((n) => n.title.toLowerCase().includes(search.toLowerCase()))
@@ -113,7 +111,8 @@ function Notes() {
                     ) : (
                       <span className="view-btn disabled">No File</span>
                     )}
-                    <button className="share-btn" onClick={() => handleShare(note)}>Share</button>
+                    {/* FIXED: Passing note._id correctly here */}
+                    <button className="share-btn" onClick={() => handleShare(note._id)}>Share</button>
                     <button className="delete-btn" onClick={() => handleDelete(note._id)}>Delete</button>
                   </div>
                 </div>
@@ -121,12 +120,11 @@ function Notes() {
           </div>
         </div>
 
-        {/* SHARE MODAL */}
         {shareModal && (
           <div className="share-overlay" onClick={() => setShareModal(false)}>
             <div className="share-modal" onClick={(e) => e.stopPropagation()}>
-              <h3>Share {fileType}</h3>
-              <p className="modal-subtitle">Copy the link below to share your note.</p>
+              <h3>Share File</h3>
+              <p className="modal-subtitle">Anyone with this link can view the file.</p>
               
               <div className="share-input-group">
                 <input type="text" value={shareLink} readOnly />
@@ -137,7 +135,7 @@ function Notes() {
               </div>
 
               <div className="share-social-grid">
-                <a href={`https://wa.me/?text=Check this: ${shareLink}`} target="_blank" rel="noreferrer" className="social-link whatsapp">WhatsApp</a>
+                <a href={`https://wa.me/?text=Check this note: ${shareLink}`} target="_blank" rel="noreferrer" className="social-link whatsapp">WhatsApp</a>
                 <a href={`mailto:?subject=Shared Note&body=${shareLink}`} className="social-link email">Email</a>
               </div>
               

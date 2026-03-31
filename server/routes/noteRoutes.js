@@ -65,6 +65,23 @@ router.get("/shared/:id", async (req, res) => {
     res.status(500).json({ message: "Failed to load note" });
   }
 });
+/* ================= GET SHARE LINK ================= */
+router.get("/share-link/:id", async (req, res) => {
+  try {
+    const note = await Note.findById(req.params.id);
+    if (!note) return res.status(404).json({ message: "Note not found" });
+
+    // Use the Render Backend URL for direct file access
+    const BACKEND = process.env.BACKEND_URL || "https://knowledge-retention-platform-1.onrender.com";
+    
+    // This generates the actual URL to the file in your 'uploads' folder
+    const fileLink = `${BACKEND}/uploads/${note.fileName}`;
+
+    res.json({ shareLink: fileLink });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to generate link" });
+  }
+});
 
 /* ================= DELETE NOTE ================= */
 router.delete("/:id", async (req, res) => {
