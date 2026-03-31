@@ -16,7 +16,7 @@ function SharedQuiz() {
   const fetchQuiz = useCallback(async () => {
   try {
     // Ensure this exactly matches your backend: /api/quizzes/shared/:token
-    const res = await axios.get(`${API}/api/quizzes/shared/${slugToken}`);
+   const res = await axios.get(`${API}/api/quizzes/shared/${slugToken}`);
     setQuiz(res.data);
     setTimeLeft((res.data.timeLimit || 10) * 60);
   } catch (err) {

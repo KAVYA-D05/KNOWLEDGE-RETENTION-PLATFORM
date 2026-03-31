@@ -3,5 +3,3 @@ const API = window.location.hostname === "localhost"
   : "https://knowledge-retention-platform-1.onrender.com";
 
 export default API;
-
-

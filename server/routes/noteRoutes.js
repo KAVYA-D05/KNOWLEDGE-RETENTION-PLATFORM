@@ -66,15 +66,12 @@ router.get("/shared/:id", async (req, res) => {
   }
 });
 /* ================= GET SHARE LINK ================= */
-/* ================= GET SHARE LINK ================= */
 router.get("/share-link/:id", async (req, res) => {
   try {
     const note = await Note.findById(req.params.id);
-    if (!note) return res.status(404).json({ message: "Note not found" });
-
     const BACKEND = process.env.BACKEND_URL || "https://knowledge-retention-platform-1.onrender.com";
     
-    // CRITICAL FIX: Encode the filename to handle spaces and special characters
+    // Encodes spaces so "File Name.pdf" becomes "File%20Name.pdf"
     const safeFileName = encodeURIComponent(note.fileName);
     const fileLink = `${BACKEND}/uploads/${safeFileName}`;
 
@@ -83,7 +80,6 @@ router.get("/share-link/:id", async (req, res) => {
     res.status(500).json({ message: "Failed to generate link" });
   }
 });
-
 /* ================= DELETE NOTE ================= */
 router.delete("/:id", async (req, res) => {
   try {
