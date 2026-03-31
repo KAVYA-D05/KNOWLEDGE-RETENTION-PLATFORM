@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import "../css/AttemptQuiz.css";
-
+import API from "../utils/api";
 function AttemptQuiz() {
   const { id } = useParams();
   const navigate = useNavigate();

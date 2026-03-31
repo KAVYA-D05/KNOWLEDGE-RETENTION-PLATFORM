@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import "../css/SharedNote.css";
+import API from "../utils/api";
 
 function SharedNote() {
   const { id } = useParams();

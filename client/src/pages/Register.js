@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import "../css/Register.css";
 import { Link, useNavigate } from "react-router-dom";
+import API from "../utils/api";
 
 function Register() {
   const [name, setName] = useState("");

@@ -3,6 +3,7 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import "../css/Quiz.css";
+import API from "../utils/api";
 
 function Quiz() {
   const [quizzes, setQuizzes] = useState([]);

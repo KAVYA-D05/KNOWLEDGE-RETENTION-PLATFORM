@@ -6,7 +6,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, PieChart, Pie, Cell, Label
 } from "recharts";
-
+import API from "../utils/api";
 function Dashboard() {
   const email = localStorage.getItem("email");
   const [attempts, setAttempts] = useState([]);

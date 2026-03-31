@@ -3,7 +3,7 @@ import axios from "axios";
 import "../css/Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import googleIcon from "../images/google_icon.png";
-
+import API from "../utils/api";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import "../css/SharedQuiz.css";
+import API from "../utils/api";
 
 function SharedQuiz() {
   const { slugToken } = useParams();

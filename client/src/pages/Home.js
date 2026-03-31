@@ -3,7 +3,7 @@ import { useEffect, useState, useCallback } from "react"; // Added useCallback
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import "../css/Home.css";
-
+import API from "../utils/api";
 function Home() {
   const navigate = useNavigate();
   const username = localStorage.getItem("username") || "Learner";

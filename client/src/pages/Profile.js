@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import "../css/Profile.css";
+import API from "../utils/api";
 
 function Profile() {
   const [email, setEmail] = useState("");

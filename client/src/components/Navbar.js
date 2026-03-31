@@ -2,7 +2,7 @@ import { useNavigate, useLocation } from "react-router-dom"; // Added useLocatio
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "../css/Navbar.css";
-
+import API from "../utils/api";
 function Navbar() {
   const navigate = useNavigate();
   const location = useLocation(); // To highlight the current page

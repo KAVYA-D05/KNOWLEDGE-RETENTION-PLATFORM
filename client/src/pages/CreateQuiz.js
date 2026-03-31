@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import "../css/CreateQuiz.css";
-
+import API from "../utils/api";
 function CreateQuiz() {
   const [topic, setTopic] = useState("");
   const [description, setDescription] = useState("");
