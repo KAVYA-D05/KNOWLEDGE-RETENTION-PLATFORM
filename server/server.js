@@ -57,8 +57,7 @@ app.use("/api", userRoutes);
 app.use("/api", profileRoutes); 
 app.use("/api/notes", noteRoutes);
 app.use("/api/quizzes", quizRoutes);
-app.use("/uploads", express.static("uploads"));
-
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 /* ================== DATABASE ================== */
 mongoose
   .connect(process.env.MONGO_URI)

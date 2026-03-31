@@ -14,16 +14,18 @@ function SharedQuiz() {
   const email = localStorage.getItem("email") || "guest_user@quizapp.com";
 
   const fetchQuiz = useCallback(async () => {
-    try {
-      const res = await axios.get(`${API}/api/quizzes/shared/${slugToken}`);
-      setQuiz(res.data);
-      setTimeLeft((res.data.timeLimit || 10) * 60);
-    } catch (err) {
-      alert("This quiz link has expired or is invalid.");
-    } finally {
-      setLoading(false);
-    }
-  }, [slugToken]);
+  try {
+    // Ensure this exactly matches your backend: /api/quizzes/shared/:token
+    const res = await axios.get(`${API}/api/quizzes/shared/${slugToken}`);
+    setQuiz(res.data);
+    setTimeLeft((res.data.timeLimit || 10) * 60);
+  } catch (err) {
+    console.error("Fetch error details:", err.response); // Check this in F12 console
+    alert("This quiz link has expired or is invalid.");
+  } finally {
+    setLoading(false);
+  }
+}, [slugToken]);
 
   useEffect(() => {
     fetchQuiz();

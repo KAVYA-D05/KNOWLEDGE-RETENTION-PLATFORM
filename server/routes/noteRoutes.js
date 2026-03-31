@@ -66,16 +66,17 @@ router.get("/shared/:id", async (req, res) => {
   }
 });
 /* ================= GET SHARE LINK ================= */
+/* ================= GET SHARE LINK ================= */
 router.get("/share-link/:id", async (req, res) => {
   try {
     const note = await Note.findById(req.params.id);
     if (!note) return res.status(404).json({ message: "Note not found" });
 
-    // Use the Render Backend URL for direct file access
     const BACKEND = process.env.BACKEND_URL || "https://knowledge-retention-platform-1.onrender.com";
     
-    // This generates the actual URL to the file in your 'uploads' folder
-    const fileLink = `${BACKEND}/uploads/${note.fileName}`;
+    // CRITICAL FIX: Encode the filename to handle spaces and special characters
+    const safeFileName = encodeURIComponent(note.fileName);
+    const fileLink = `${BACKEND}/uploads/${safeFileName}`;
 
     res.json({ shareLink: fileLink });
   } catch (err) {
