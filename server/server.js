@@ -4,7 +4,7 @@ import session from "express-session";
 import passport from "passport";
 import cors from "cors";
 import mongoose from "mongoose";
-import path from "path"; // Keep this one at the top
+import path from "path"; // Single import at the top
 
 import "./config/passport.js";
 import googleAuthRoutes from "./routes/googleAuthRoutes.js";
@@ -36,7 +36,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve the uploads folder publicly
+// Serve the uploads folder publicly for your Note files
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 app.use(

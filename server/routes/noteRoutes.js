@@ -69,11 +69,14 @@ router.get("/shared/:id", async (req, res) => {
 router.get("/share-link/:id", async (req, res) => {
   try {
     const note = await Note.findById(req.params.id);
+    if (!note) return res.status(404).json({ message: "Note not found" });
+
+    // This uses the BACKEND_URL you set in Render
     const BACKEND = process.env.BACKEND_URL || "https://knowledge-retention-platform-1.onrender.com";
     
-    // Encodes spaces so "File Name.pdf" becomes "File%20Name.pdf"
-   const safeFileName = encodeURIComponent(note.fileName);
-const fileLink = `${BACKEND}/uploads/${safeFileName}`;
+    // Encodes the filename to handle spaces like in your screenshot
+    const safeFileName = encodeURIComponent(note.fileName);
+    const fileLink = `${BACKEND}/uploads/${safeFileName}`;
 
     res.json({ shareLink: fileLink });
   } catch (err) {
