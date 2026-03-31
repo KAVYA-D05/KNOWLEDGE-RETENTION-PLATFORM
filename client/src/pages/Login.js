@@ -8,7 +8,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-const API = "https://knowledge-retention-platform-1.onrender.com";
+  const API = "https://knowledge-retention-platform-1.onrender.com";
   const navigate = useNavigate();
 
   /* ================= NORMAL LOGIN ================= */
