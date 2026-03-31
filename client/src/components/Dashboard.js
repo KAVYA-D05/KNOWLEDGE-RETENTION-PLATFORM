@@ -12,19 +12,13 @@ function Dashboard() {
   const [attempts, setAttempts] = useState([]);
   const [search, setSearch] = useState("");
 
-  // ✅ FIX ADDED HERE (IMPORTANT)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    fetchAttempts();
-  }, []);
+  useEffect(() => { fetchAttempts(); }, []);
 
   const fetchAttempts = async () => {
     try {
       const res = await axios.get(`http://localhost:5000/api/quizzes/attempts/${email}`);
       setAttempts(res.data);
-    } catch (err) {
-      console.log("Failed to fetch");
-    }
+    } catch (err) { console.log("Failed to fetch"); }
   };
 
   const handleDelete = async (id) => {
@@ -32,9 +26,7 @@ function Dashboard() {
     try {
       await axios.delete(`http://localhost:5000/api/quizzes/attempt/${id}`);
       fetchAttempts();
-    } catch (error) {
-      console.log("Delete failed");
-    }
+    } catch (error) { console.log("Delete failed"); }
   };
 
   /* Analytics Calculations */
@@ -45,8 +37,8 @@ function Dashboard() {
 
   const chartData = attempts.map((a) => ({
     topic: a.topic.length > 10 ? a.topic.substring(0, 10) + ".." : a.topic,
-    score: a.score === 0 ? 0.1 : a.score,
-    displayScore: a.score
+    score: a.score === 0 ? 0.1 : a.score, // Small value to show a tiny bar for 0 scores
+    displayScore: a.score // Real value for the tooltip
   }));
 
   const pieData = [
@@ -66,15 +58,16 @@ function Dashboard() {
             <p>Track your learning progress and quiz history</p>
           </div>
           <div className="search-wrapper">
-            <input
-              type="text"
-              placeholder="🔍 Search by topic..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+            <input 
+              type="text" 
+              placeholder="🔍 Search by topic..." 
+              value={search} 
+              onChange={(e) => setSearch(e.target.value)} 
             />
           </div>
         </header>
 
+        {/* STAT CARDS */}
         <div className="stats-grid">
           <div className="stat-card">
             <span>Total Quizzes</span>
@@ -91,42 +84,67 @@ function Dashboard() {
         </div>
 
         <div className="analytics-main-grid">
+          {/* BAR CHART BOX */}
           <div className="analytics-box">
             <div className="box-header">
               <h3>Score Consistency</h3>
               <span className="badge">Performance over time</span>
             </div>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={chartData}>
+              <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="topic" />
-                <YAxis domain={[0, 5]} />
-                <Tooltip formatter={(value, name, props) => [props.payload.displayScore, "Score"]} />
-                <Bar dataKey="score" fill="#7c3aed" />
+                <XAxis dataKey="topic" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} />
+                <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8'}} domain={[0, 5]} />
+                <Tooltip 
+                  cursor={{fill: '#f8fafc'}}
+                  contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)'}}
+                  formatter={(value, name, props) => [props.payload.displayScore, "Score"]}
+                />
+                <Bar dataKey="score" fill="url(#colorGradient)" radius={[6, 6, 0, 0]} barSize={40} />
+                <defs>
+                  <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#7c3aed" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#7c3aed" stopOpacity={1}/>
+                  </linearGradient>
+                </defs>
               </BarChart>
             </ResponsiveContainer>
           </div>
 
+          {/* DONUT CHART BOX */}
           <div className="analytics-box donut-container">
             <h3>Overall Accuracy</h3>
             <ResponsiveContainer width="100%" height={220}>
               <PieChart>
-                <Pie data={pieData} innerRadius={70} outerRadius={90} dataKey="value">
+                <Pie
+                  data={pieData}
+                  innerRadius={70}
+                  outerRadius={90}
+                  paddingAngle={8}
+                  dataKey="value"
+                  stroke="none"
+                >
                   {pieData.map((entry, index) => (
-                    <Cell key={index} fill={COLORS[index]} />
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
-                  <Label
-                    value={`${((average / 5) * 100).toFixed(0)}%`}
-                    position="center"
+                  <Label 
+                    value={`${((average/5)*100).toFixed(0)}%`} 
+                    position="center" 
+                    fill="#1e293b" 
+                    style={{fontSize: '24px', fontWeight: 'bold'}}
                   />
                 </Pie>
               </PieChart>
             </ResponsiveContainer>
+            <p className="donut-subtitle">Total Performance Mastery</p>
           </div>
         </div>
 
+        {/* RECENT ACTIVITY TABLE */}
         <div className="table-container">
-          <h3>Recent Attempts</h3>
+          <div className="box-header">
+            <h3>Recent Attempts</h3>
+          </div>
           <table className="modern-table">
             <thead>
               <tr>
@@ -141,18 +159,21 @@ function Dashboard() {
                 .filter(a => a.topic.toLowerCase().includes(search.toLowerCase()))
                 .map(a => (
                   <tr key={a._id}>
-                    <td>{a.topic}</td>
-                    <td>{a.score}/5</td>
-                    <td>{new Date(a.createdAt).toLocaleDateString()}</td>
+                    <td className="topic-cell">{a.topic}</td>
                     <td>
-                      <button onClick={() => handleDelete(a._id)}>Delete</button>
+                      <span className={`score-badge ${a.score >= 3 ? 'pass' : 'fail'}`}>
+                        {a.score} / 5
+                      </span>
+                    </td>
+                    <td className="date-cell">{new Date(a.createdAt).toLocaleDateString()}</td>
+                    <td>
+                      <button className="del-btn" onClick={() => handleDelete(a._id)}>Delete</button>
                     </td>
                   </tr>
                 ))}
             </tbody>
           </table>
         </div>
-
       </div>
     </div>
   );
