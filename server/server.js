@@ -18,9 +18,9 @@ const app = express();
 /* ================== CORS CONFIGURATION ================== */
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://knowledge-retention-platform.netlify.app"
+  "https://knowledge-retention-platform.netlify.app",
+  "https://knowledge-retention-platform.onrender.com" // Add this
 ];
-
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
@@ -69,3 +69,11 @@ mongoose
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
+/* ================== ROOT ROUTE ================== */
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: "Knowledge Retention Platform API is running!",
+    status: "Healthy"
+  });
+});
