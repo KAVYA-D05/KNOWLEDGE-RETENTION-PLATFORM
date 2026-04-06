@@ -4,6 +4,9 @@ import Navbar from "../components/Navbar";
 import "../css/Notes.css";
 import API from "../utils/api";
 
+// 🔥 GLOBAL FIX (VERY IMPORTANT)
+axios.defaults.withCredentials = true;
+
 function Notes() {
   const email = localStorage.getItem("email");
   const [notes, setNotes] = useState([]);
@@ -11,11 +14,11 @@ function Notes() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [file, setFile] = useState(null);
-  
-  // Modal States
+
   const [shareModal, setShareModal] = useState(false);
   const [shareLink, setShareLink] = useState("");
 
+  // ✅ FETCH NOTES
   const fetchNotes = useCallback(async () => {
     try {
       const res = await axios.get(`${API}/api/notes/my/${email}`);
@@ -29,8 +32,10 @@ function Notes() {
     fetchNotes();
   }, [fetchNotes]);
 
+  // ✅ ADD NOTE
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
@@ -38,108 +43,208 @@ function Notes() {
     if (file) formData.append("file", file);
 
     try {
-      await axios.post(`${API}/api/notes`, formData);
+      await axios.post(`${API}/api/notes`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+
       setTitle("");
       setDescription("");
       setFile(null);
-      e.target.reset(); 
+      e.target.reset();
       fetchNotes();
+
     } catch (err) {
       console.error("Error adding note", err);
     }
   };
 
+  // ✅ DELETE NOTE
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this note?")) {
-      await axios.delete(`${API}/api/notes/${id}`);
-      fetchNotes();
+      try {
+        await axios.delete(`${API}/api/notes/${id}`);
+        fetchNotes();
+      } catch (err) {
+        console.error("Error deleting note", err);
+      }
     }
   };
 
-  // FIXED: This now matches the Backend route we created earlier
+  // ✅ SHARE NOTE
   const handleShare = async (noteId) => {
     try {
       const res = await axios.get(`${API}/api/notes/share-link/${noteId}`);
-      setShareLink(res.data.shareLink); // Corrected state setter
+      setShareLink(res.data.shareLink);
       setShareModal(true);
     } catch (err) {
-      alert("Could not generate share link. Make sure the backend is updated.");
+      alert("Could not generate share link.");
     }
   };
 
   return (
     <>
       <Navbar />
+
       <div className="notes-page">
         <div className="notes-container">
-          
+
+          {/* CREATE NOTE */}
           <section className="create-note-box">
             <h3>Create New Note</h3>
+
             <form onSubmit={handleSubmit}>
               <div className="input-group">
-                <input type="text" placeholder="Note Title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+                <input
+                  type="text"
+                  placeholder="Note Title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  required
+                />
               </div>
+
               <div className="input-group">
-                <textarea placeholder="Write description..." value={description} onChange={(e) => setDescription(e.target.value)} required />
+                <textarea
+                  placeholder="Write description..."
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  required
+                />
               </div>
+
               <div className="input-group file-input-wrapper">
-                <input type="file" accept=".pdf,.doc,.docx,.png,.jpg" onChange={(e) => setFile(e.target.files[0])} />
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx,.png,.jpg"
+                  onChange={(e) => setFile(e.target.files[0])}
+                />
               </div>
-              <button type="submit" className="add-note-btn">Add Note</button>
+
+              <button type="submit" className="add-note-btn">
+                Add Note
+              </button>
             </form>
           </section>
 
+          {/* HEADER */}
           <div className="notes-header">
             <h2>My Notes</h2>
+
             <div className="search-wrapper">
-              <input type="text" placeholder="🔍 Search notes..." value={search} onChange={(e) => setSearch(e.target.value)} />
+              <input
+                type="text"
+                placeholder="🔍 Search notes..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
             </div>
           </div>
 
+          {/* NOTES LIST */}
           <div className="notes-list">
             {notes
-              .filter((n) => n.title.toLowerCase().includes(search.toLowerCase()))
+              .filter((n) =>
+                n.title.toLowerCase().includes(search.toLowerCase())
+              )
               .map((note) => (
                 <div className="note-card" key={note._id}>
                   <div className="note-info">
                     <h4>{note.title}</h4>
                     <p>{note.description}</p>
                   </div>
+
                   <div className="note-actions">
                     {note.fileName ? (
-                      <a href={`${API}/uploads/${note.fileName}`} target="_blank" rel="noreferrer" className="view-btn">View</a>
+                      <a
+                        href={`${API}/uploads/${note.fileName}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="view-btn"
+                      >
+                        View
+                      </a>
                     ) : (
-                      <span className="view-btn disabled">No File</span>
+                      <span className="view-btn disabled">
+                        No File
+                      </span>
                     )}
-                    {/* FIXED: Passing note._id correctly here */}
-                    <button className="share-btn" onClick={() => handleShare(note._id)}>Share</button>
-                    <button className="delete-btn" onClick={() => handleDelete(note._id)}>Delete</button>
+
+                    <button
+                      className="share-btn"
+                      onClick={() => handleShare(note._id)}
+                    >
+                      Share
+                    </button>
+
+                    <button
+                      className="delete-btn"
+                      onClick={() => handleDelete(note._id)}
+                    >
+                      Delete
+                    </button>
                   </div>
                 </div>
               ))}
           </div>
+
         </div>
 
+        {/* SHARE MODAL */}
         {shareModal && (
-          <div className="share-overlay" onClick={() => setShareModal(false)}>
-            <div className="share-modal" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="share-overlay"
+            onClick={() => setShareModal(false)}
+          >
+            <div
+              className="share-modal"
+              onClick={(e) => e.stopPropagation()}
+            >
               <h3>Share File</h3>
-              <p className="modal-subtitle">Anyone with this link can view the file.</p>
-              
+
+              <p className="modal-subtitle">
+                Anyone with this link can view the file.
+              </p>
+
               <div className="share-input-group">
                 <input type="text" value={shareLink} readOnly />
-                <button className="copy-inner-btn" onClick={() => {
-                  navigator.clipboard.writeText(shareLink);
-                  alert("Link copied!");
-                }}>Copy</button>
+
+                <button
+                  className="copy-inner-btn"
+                  onClick={() => {
+                    navigator.clipboard.writeText(shareLink);
+                    alert("Link copied!");
+                  }}
+                >
+                  Copy
+                </button>
               </div>
 
               <div className="share-social-grid">
-                <a href={`https://wa.me/?text=Check this note: ${shareLink}`} target="_blank" rel="noreferrer" className="social-link whatsapp">WhatsApp</a>
-                <a href={`mailto:?subject=Shared Note&body=${shareLink}`} className="social-link email">Email</a>
+                <a
+                  href={`https://wa.me/?text=Check this note: ${shareLink}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="social-link whatsapp"
+                >
+                  WhatsApp
+                </a>
+
+                <a
+                  href={`mailto:?subject=Shared Note&body=${shareLink}`}
+                  className="social-link email"
+                >
+                  Email
+                </a>
               </div>
-              
-              <button className="modal-close-btn" onClick={() => setShareModal(false)}>Close</button>
+
+              <button
+                className="modal-close-btn"
+                onClick={() => setShareModal(false)}
+              >
+                Close
+              </button>
             </div>
           </div>
         )}
