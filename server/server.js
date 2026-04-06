@@ -19,7 +19,7 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:3000",
   "https://knowledge-retention-platform.netlify.app",
-  "https://knowledge-retention-platform.onrender.com" // Add this
+  "https://knowledge-retention-platform-2.onrender.com" // ✅
 ];
 app.use(cors({
   origin: function (origin, callback) {
