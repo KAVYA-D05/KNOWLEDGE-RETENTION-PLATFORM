@@ -18,18 +18,20 @@ const app = express();
 /* ================== CORS CONFIGURATION ================== */
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://knowledge-retention-platform.netlify.app",
-  "https://knowledge-retention-platform-2.onrender.com" // ✅
+  "https://knowledge-retention-platform-2.onrender.com"
 ];
+
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      return callback(new Error('CORS error: This origin is not allowed.'), false);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error("Not allowed by CORS"));
     }
-    return callback(null, true);
   },
-  credentials: true,
+  credentials: true
 }));
 
 /* ================== MIDDLEWARE ================== */
