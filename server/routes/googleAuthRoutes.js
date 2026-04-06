@@ -13,7 +13,7 @@ router.get(
 router.get(
   "/google/callback",
   passport.authenticate("google", {
-    failureRedirect: "http://localhost:3000/login",
+    failureRedirect: `${process.env.CLIENT_URL}/login`,
     session: true,
   }),
   (req, res) => {
@@ -23,7 +23,7 @@ router.get(
     console.log("Google login success:", name, email);
 
     res.redirect(
-      `http://localhost:3000/google-success?name=${encodeURIComponent(
+      `${process.env.CLIENT_URL}/google-success?name=${encodeURIComponent(
         name
       )}&email=${encodeURIComponent(email)}`
     );
@@ -33,7 +33,7 @@ router.get(
 /* ================= LOGOUT ================= */
 router.get("/logout", (req, res) => {
   req.logout(() => {
-    res.redirect("http://localhost:3000/login");
+    res.redirect(`${process.env.CLIENT_URL}/login`);
   });
 });
 
