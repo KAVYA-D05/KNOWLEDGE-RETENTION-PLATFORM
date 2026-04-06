@@ -1,4 +1,2 @@
-const API = process.env.REACT_APP_API_URL;
-
+const API = "https://knowledge-retention-platform-1.onrender.com";
 export default API;
-
