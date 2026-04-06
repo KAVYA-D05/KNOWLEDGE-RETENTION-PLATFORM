@@ -114,7 +114,7 @@ router.put("/share/:id", async (req, res) => {
     });
 
     // Use the environment variable, or fallback to the Netlify URL
-    const FRONTEND = process.env.FRONTEND_URL || "https://knowledge-retention-platform.netlify.app";
+    const FRONTEND = process.env.FRONTEND_URL;
 
     res.json({
       shareLink: `${FRONTEND}/shared-quiz/${slug}-${token}`,
