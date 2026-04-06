@@ -1,31 +1,15 @@
-/* ================= VARIABLES ================= */
-:root {
-  --primary: #7c3aed;
-  --primary-hover: #6d28d9;
-  --bg-page: #f4f7fe;
-  --bg-card: #ffffff;
-  --text-dark: #1e293b;
-  --text-muted: #64748b;
-  --border: #e2e8f0;
-  --danger: #ef4444;
-  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  --radius: 16px;
-  --transition: all 0.25s ease;
-}
-
 /* ================= LAYOUT ================= */
 .notes-page {
-  background: var(--bg-page);
+  background: #f4f7fe;
   min-height: 100vh;
-  padding-top: 90px;
+  padding-top: 100px; /* Room for fixed navbar */
   font-family: 'Inter', sans-serif;
 }
 
 .notes-container {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 0 24px 40px;
   display: flex;
   flex-direction: column;
   gap: 30px;
@@ -33,274 +17,136 @@
 
 /* ================= CREATE BOX ================= */
 .create-note-box {
-  background: var(--bg-card);
+  background: white;
   padding: 25px;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
 }
 
-.create-note-box h3 {
-  margin-bottom: 15px;
-  font-size: 1.2rem;
-  color: var(--text-dark);
+.create-note-box h3 { margin-bottom: 15px; color: #1e293b; font-weight: 700; }
+
+.create-note-box form { display: flex; gap: 15px; align-items: flex-end; }
+
+.input-group { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+
+.create-note-box input, .create-note-box textarea {
+  width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0;
+  background: #fcfdfe; font-size: 14px; outline: none;
 }
 
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.create-note-box input, 
-.create-note-box textarea {
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px;
-  font-size: 14px;
-  outline: none;
-  transition: var(--transition);
-  background: #f8fafc;
-}
-
-.create-note-box textarea {
-  height: 80px;
-  resize: none;
-}
-
-.create-note-box input:focus, 
-.create-note-box textarea:focus {
-  border-color: var(--primary);
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
-}
-
-.form-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.file-input {
-  font-size: 12px;
-  color: var(--text-muted);
-}
+.create-note-box textarea { height: 45px; resize: none; }
 
 .add-note-btn {
-  background: var(--primary);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
+  background: #7c3aed; color: white; padding: 0 25px; height: 45px;
+  border: none; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.3s;
 }
 
-.add-note-btn:hover {
-  background: var(--primary-hover);
-  transform: translateY(-2px);
-}
+.add-note-btn:hover { background: #6d28d9; transform: translateY(-2px); }
 
-/* ================= GRID & SEARCH ================= */
-.notes-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 20px;
-}
+/* ================= GRID & CARDS ================= */
+.notes-header { display: flex; justify-content: space-between; align-items: center; }
+.notes-header h2 { font-size: 24px; font-weight: 800; color: #1e293b; }
 
 .search-wrapper input {
-  padding: 10px 20px;
-  width: 280px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  outline: none;
-  transition: var(--transition);
-}
-
-.search-wrapper input:focus {
-  width: 320px;
-  border-color: var(--primary);
+  padding: 10px 20px; width: 300px; border-radius: 30px; border: 1px solid #e2e8f0; outline: none;
 }
 
 .notes-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;
 }
 
-/* ================= NOTE CARD ================= */
 .note-card {
-  background: var(--bg-card);
-  padding: 24px;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: var(--transition);
+  background: white; padding: 24px; border-radius: 18px; border: 1px solid #e2e8f0;
+  display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s;
 }
 
-.note-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-md);
-}
+.note-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
 
-.note-content h4 {
-  font-size: 1.1rem;
-  margin-bottom: 10px;
-  color: var(--text-dark);
-}
-
-.note-content p {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  line-height: 1.5;
-}
-
-.note-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 20px;
-}
-
+.note-actions { display: flex; gap: 10px; }
 .view-btn, .delete-btn, .share-btn {
-  flex: 1;
-  padding: 8px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: var(--transition);
-  text-decoration: none;
-  text-align: center;
+  flex: 1; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 600; text-align: center; cursor: pointer; border: none;
 }
 
-.view-btn { background: #f1f5f9; color: #475569; }
-.view-btn:hover { background: #e2e8f0; }
-.view-btn.disabled { opacity: 0.5; cursor: not-allowed; }
+.view-btn { background: #eff6ff; color: #2563eb; text-decoration: none; }
+.delete-btn { background: #fef2f2; color: #ef4444; border: 1px solid #fee2e2; }
+.share-btn { background: linear-gradient(90deg, #7c3aed, #ec4899); color: white; }
 
-.share-btn { background: #ede9fe; color: var(--primary); }
-.share-btn:hover { background: #ddd6fe; }
-
-.delete-btn { background: #fef2f2; color: var(--danger); }
-.delete-btn:hover { background: #fee2e2; }
-
-/* ================= MODALS ================= */
+/* ================= MODAL STYLES ================= */
 .share-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(4px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+  position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; z-index: 4000;
 }
 
 .share-modal {
-  background: white;
-  padding: 30px;
-  border-radius: 24px;
-  width: 90%;
-  max-width: 400px;
-  box-shadow: var(--shadow-md);
+  background: white; padding: 30px; border-radius: 24px; width: 90%; max-width: 420px;
+  text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.2);
 }
 
-.preview-modal {
-  max-width: 800px;
-}
-
-.modal-subtitle {
-  font-size: 14px;
-  color: var(--text-muted);
-  margin: 10px 0 20px;
-}
+.modal-subtitle { color: #64748b; font-size: 14px; margin-bottom: 20px; }
 
 .share-input-group {
-  display: flex;
-  background: #f1f5f9;
-  border-radius: 12px;
-  padding: 6px;
-  margin-bottom: 20px;
+  display: flex; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px;
+  padding: 6px; margin-bottom: 20px; gap: 8px;
 }
 
 .share-input-group input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  padding: 10px;
-  font-size: 13px;
-  outline: none;
+  flex: 1; border: none; background: transparent; padding-left: 10px; outline: none; font-size: 13px;
 }
 
+/* ✅ COPY BUTTON COLOR */
 .copy-inner-btn {
-  background: var(--primary);
-  color: white;
-  border: none;
-  padding: 0 15px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
+  background: #7c3aed; color: white; border: none; padding: 8px 16px;
+  border-radius: 8px; font-weight: 600; cursor: pointer;
 }
 
-.share-social-grid {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
+.share-social-grid { display: flex; gap: 12px; margin-bottom: 20px; }
 .social-link {
-  flex: 1;
-  text-align: center;
-  padding: 10px;
-  border-radius: 10px;
-  color: white;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 13px;
+  flex: 1; padding: 12px; border-radius: 10px; text-decoration: none; color: white; font-weight: 700;
 }
-
 .whatsapp { background: #22c55e; }
 .email { background: #3b82f6; }
 
-.preview-container {
-  background: #f8fafc;
-  height: 400px;
-  border-radius: 12px;
-  overflow-y: auto;
-  margin-bottom: 20px;
+/* ✅ CLOSE BUTTON COLOR */
+.modal-close-btn {
+  width: 100%; padding: 12px; background: #f9f4f1; color: #64748b;
+  border: none; border-radius: 12px; font-weight: 700; cursor: pointer;
 }
-
-.preview-container iframe, 
-.preview-container img {
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-
-.preview-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.download-link {
-  color: var(--primary);
+.copy-inner-btn {
+  background: #7c3aed !important; /* The same purple as your Add Note button */
+  color: white !important;
+  border-radius: 8px;
+  padding: 8px 16px;
   font-weight: 600;
-  font-size: 14px;
-  text-decoration: none;
 }
 
 .modal-close-btn {
-  background: #f1f5f9;
-  border: none;
-  padding: 10px 20px;
+  background: #f1f5f9 !important; /* A light slate gray */
+  color: #64748b !important;
+  border-radius: 12px;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.modal-close-btn:hover {
+  background: #e2e8f0 !important;
+  color: #1e293b !important;
+}
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  background: white;
+  padding: 20px;
   border-radius: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  color: var(--text-muted);
+  width: 60%;
 }
