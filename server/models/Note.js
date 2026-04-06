@@ -14,8 +14,8 @@ const noteSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    fileName: {
-      type: String,
+    file: {
+      type: String, // 🔥 Cloudinary URL
     },
   },
   { timestamps: true }

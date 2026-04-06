@@ -1,20 +1,8 @@
 import express from "express";
-import multer from "multer";
+import upload from "../middleware/upload.js";
 import Note from "../models/Note.js";
 
 const router = express.Router();
-
-/* ================= MULTER CONFIG ================= */
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
-
-const upload = multer({ storage });
 
 /* ================= CREATE NOTE ================= */
 router.post("/", upload.single("file"), async (req, res) => {
@@ -29,11 +17,12 @@ router.post("/", upload.single("file"), async (req, res) => {
       title,
       description,
       createdBy,
-      fileName: req.file ? req.file.filename : null,
+      file: req.file ? req.file.path : null, // Cloudinary URL
     });
 
     res.status(201).json(newNote);
   } catch (error) {
+    console.error("Cloudinary Upload Error:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
@@ -51,7 +40,7 @@ router.get("/my/:email", async (req, res) => {
   }
 });
 
-/* ================= GET SHARED NOTE PAGE ================= */
+/* ================= GET SINGLE NOTE ================= */
 router.get("/shared/:id", async (req, res) => {
   try {
     const note = await Note.findById(req.params.id);
@@ -65,24 +54,19 @@ router.get("/shared/:id", async (req, res) => {
     res.status(500).json({ message: "Failed to load note" });
   }
 });
+
 /* ================= GET SHARE LINK ================= */
 router.get("/share-link/:id", async (req, res) => {
   try {
     const note = await Note.findById(req.params.id);
     if (!note) return res.status(404).json({ message: "Note not found" });
 
-    // This uses the BACKEND_URL you set in Render
-    const BACKEND = process.env.BACKEND_URL || "https://knowledge-retention-platform-1.onrender.com";
-    
-    // Encodes the filename to handle spaces like in your screenshot
-    const safeFileName = encodeURIComponent(note.fileName);
-    const fileLink = `${BACKEND}/uploads/${safeFileName}`;
-
-    res.json({ shareLink: fileLink });
+    res.json({ shareLink: note.file }); // Cloudinary URL
   } catch (err) {
     res.status(500).json({ message: "Failed to generate link" });
   }
 });
+
 /* ================= DELETE NOTE ================= */
 router.delete("/:id", async (req, res) => {
   try {
