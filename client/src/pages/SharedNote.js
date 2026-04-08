@@ -8,6 +8,7 @@ function SharedNote() {
   const { id } = useParams();
   const [note, setNote] = useState(null);
   const [error, setError] = useState(false);
+
   useEffect(() => {
     axios.get(`${API}/api/notes/shared/${id}`)
       .then((res) => setNote(res.data))
@@ -23,11 +24,22 @@ function SharedNote() {
         <div className="badge">Shared Note</div>
         <h1 className="title">{note.title}</h1>
         <p className="desc">{note.description}</p>
-        {note.fileName && (
-          <a href={`${API}/uploads/${note.fileName}`} target="_blank" rel="noreferrer" className="btn"> Download Attachment </a>
+
+        {/* 🔥 FIXED PART */}
+        {note.file && (
+          <a 
+            href={note.file} 
+            target="_blank" 
+            rel="noreferrer" 
+            className="btn"
+          >
+            Download Attachment
+          </a>
         )}
+
       </div>
     </div>
   );
 }
+
 export default SharedNote;

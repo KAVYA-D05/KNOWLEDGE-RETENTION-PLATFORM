@@ -65,15 +65,15 @@ function Notes() {
     }
   };
 
-  const handleShare = async (noteId) => {
-    try {
-      const res = await axios.get(`${API}/api/notes/share-link/${noteId}`);
-      setShareLink(res.data.shareLink);
-      setShareModal(true);
-    } catch {
-      alert("Share failed");
-    }
-  };
+ const handleShare = async (noteId) => {
+  try {
+    const shareUrl = `${window.location.origin}/shared/${noteId}`;
+    setShareLink(shareUrl);
+    setShareModal(true);
+  } catch {
+    alert("Share failed");
+  }
+};
 
   return (
     <>
